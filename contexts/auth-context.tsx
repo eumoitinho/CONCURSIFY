@@ -128,9 +128,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return Math.max(0, planLimit - currentUsage)
   }
 
-  // Carregar perfil do usuário
+  // Carregar perfil do usuário (simplificado)
   const loadUserProfile = async (userId: string) => {
     try {
+      // Tentar carregar perfil
       const { data: profileData } = await supabase
         .from('user_profiles')
         .select('*')
@@ -141,43 +142,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setProfile(profileData)
       }
 
-      // Carregar assinatura - usar service role para bypass RLS
-      try {
-        const { data: subscriptionData, error: subError } = await supabase
-          .from('user_subscriptions')
-          .select('*')
-          .eq('user_id', userId)
-          .maybeSingle()
-        
-        if (subscriptionData) {
-          setSubscription(subscriptionData)
-        } else {
-          // Criar assinatura gratuita padrão
-          setSubscription({
-            id: 'free-default',
-            user_id: userId,
-            plan_id: 'free-plan',
-            status: 'active',
-            current_period_start: new Date().toISOString(),
-            current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-            created_at: new Date().toISOString()
-          } as any)
-        }
-      } catch (subError) {
-        console.log('Subscription not found, using free plan')
-        // Fallback para plano gratuito
-        setSubscription({
-          id: 'free-default',
-          user_id: userId,
-          plan_id: 'free-plan',
-          status: 'active',
-          current_period_start: new Date().toISOString(),
-          current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
-          created_at: new Date().toISOString()
-        } as any)
-      }
+      // Definir assinatura padrão gratuita
+      setSubscription({
+        id: 'free-default',
+        user_id: userId,
+        plan_id: 'free-plan',
+        status: 'active',
+        current_period_start: new Date().toISOString(),
+        current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+        created_at: new Date().toISOString()
+      } as UserSubscription)
+      
     } catch (error) {
       console.error('Erro ao carregar perfil:', error)
+      // Mesmo com erro, definir plano gratuito
+      setSubscription({
+        id: 'free-default',
+        user_id: userId,
+        plan_id: 'free-plan',
+        status: 'active',
+        current_period_start: new Date().toISOString(),
+        current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+        created_at: new Date().toISOString()
+      } as UserSubscription)
     }
   }
 
@@ -259,6 +246,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Função de login
   const signIn = async (email: string, password: string) => {
     try {
+      setIsLoading(true)
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -266,9 +254,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error) throw error
       
+      // Login bem-sucedido - o onAuthStateChange vai lidar com o resto
       return { user: data.user, error: null }
     } catch (error) {
       console.error('Erro no login:', error)
+      setIsLoading(false)
       return { user: null, error: error as AuthError }
     }
   }
@@ -337,21 +327,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Escutar mudanças de autenticação
   useEffect(() => {
+    let mounted = true
+
     // Verificar sessão inicial
     const getInitialSession = async () => {
       try {
-        const { data: { session }, error } = await supabase.auth.getSession()
+        const { data: { session } } = await supabase.auth.getSession()
         
-        setSession(session)
-        
-        if (session?.user && !error) {
+        if (!mounted) return
+
+        if (session?.user) {
           setUser(session.user)
+          setSession(session)
           await loadUserProfile(session.user.id)
         }
+        setIsLoading(false)
       } catch (error) {
         console.error('Erro ao carregar sessão inicial:', error)
-      } finally {
-        setIsLoading(false)
+        if (mounted) setIsLoading(false)
       }
     }
 
@@ -360,24 +353,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Escutar mudanças
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state change:', event, session?.user?.email)
-        
+        if (!mounted) return
+
         setSession(session)
         
         if (event === 'SIGNED_IN' && session?.user) {
           setUser(session.user)
           await loadUserProfile(session.user.id)
-          setIsLoading(false)
-        } else if (event === 'SIGNED_OUT') {
+        } else if (event === 'SIGNED_OUT' || !session) {
           setUser(null)
           setProfile(null)
           setSubscription(null)
-          setIsLoading(false)
         }
+        setIsLoading(false)
       }
     )
 
-    return () => subscription.unsubscribe()
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
   }, [])
 
   return (

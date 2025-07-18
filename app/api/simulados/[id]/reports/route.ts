@@ -1,13 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
-import { createServerSupabaseClient } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
 import { generateSimuladoReport, SimuladoReportData } from '@/lib/reports/simulado-report'
 import { checkFeatureAccess } from '@/lib/middleware/subscription-check'
 import { readFile } from 'fs/promises'
 import path from 'path'
 
-const supabase = createServerSupabaseClient()
+const supabase = createServerClient()
 
 export async function POST(
   req: NextRequest,

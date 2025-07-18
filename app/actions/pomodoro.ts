@@ -563,7 +563,7 @@ export async function getSettings() {
     if (!data) {
       const { data: defaultSettings } = await supabase
         .from('pomodoro_settings')
-        .insert({ user_id: session.user.id })
+        .insert({ user_id: user.id })
         .select()
         .single()
 

@@ -1,6 +1,6 @@
 'use server'
 
-import { createServerSupabaseClient } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
 import { simuladosAI, ConfiguracaoSimulado, AnalisePerformance } from '@/lib/ai/simulados-ai'
 import { SubscriptionLimits, checkFeatureAccess } from '@/lib/middleware/subscription-check'
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
@@ -8,7 +8,7 @@ import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
-const supabase = createServerSupabaseClient()
+const supabase = createServerClient()
 
 // Schema para criação de simulado
 const CriarSimuladoSchema = z.object({

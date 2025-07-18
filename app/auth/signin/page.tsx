@@ -52,7 +52,10 @@ function SignInForm() {
       if (result.error) {
         throw result.error
       }
-      // O redirecionamento será feito automaticamente pelo useEffect
+      
+      // Redirecionar imediatamente após login bem-sucedido
+      const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
+      router.push(callbackUrl)
     } catch (error: any) {
       console.error('Error signing in:', error)
       setError(error.message || 'Erro ao fazer login')

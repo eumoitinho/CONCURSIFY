@@ -95,7 +95,7 @@ export default function DashboardPage() {
           <div className="flex justify-between items-center py-8">
             <div>
               <h1 className="text-3xl font-bold text-white">
-                Olá, {session.user?.name || 'Estudante'}! 👋
+                Olá, {user?.user_metadata?.name || user?.email?.split('@')[0] || 'Estudante'}! 👋
               </h1>
               <p className="text-orange-100 text-lg">
                 Bem-vindo ao seu painel de estudos com IA

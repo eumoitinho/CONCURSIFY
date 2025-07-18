@@ -55,8 +55,8 @@ export async function GET(req: NextRequest) {
 
     if (action === 'status') {
       // Importar aqui para evitar problemas de edge runtime
-      const { createServerSupabaseClient } = await import('@/lib/supabase')
-      const supabase = createServerSupabaseClient()
+      const { createServerClient } = await import('@/lib/supabase')
+      const supabase = createServerClient()
 
       // Estatísticas básicas do banco de questões
       const { count: totalQuestoes } = await supabase

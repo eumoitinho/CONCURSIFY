@@ -1,6 +1,6 @@
 'use server'
 
-import { createServerSupabaseClient } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
 import { geminiAI, UserPreferences, CronogramaData } from '@/lib/ai/gemini'
 import { SubscriptionLimits, checkFeatureAccess } from '@/lib/middleware/subscription-check'
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
@@ -8,7 +8,7 @@ import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
-const supabase = createServerSupabaseClient()
+const supabase = createServerClient()
 
 // Schema para geração de cronograma
 const GerarCronogramaSchema = z.object({

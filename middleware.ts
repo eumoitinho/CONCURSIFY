@@ -4,59 +4,52 @@ import { createClient } from '@supabase/supabase-js'
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
   
-  // Criar cliente Supabase
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      global: {
-        headers: {
-          cookie: req.headers.get('cookie') || '',
-        },
-      },
+  // Rotas que não precisam de autenticação
+  const publicRoutes = [
+    '/',
+    '/auth/signin',
+    '/auth/signup',
+    '/auth/callback',
+    '/cadastro',
+    '/planos'
+  ]
+
+  // Se é uma rota pública, prosseguir
+  if (publicRoutes.some(route => pathname === route || pathname.startsWith(route))) {
+    return NextResponse.next()
+  }
+
+  // Verificar token de autenticação nos cookies
+  const token = req.cookies.get('sb-access-token')?.value ||
+                req.cookies.get('supabase-auth-token')?.value
+
+  // Se não há token e está tentando acessar rota protegida
+  if (!token) {
+    const protectedRoutes = [
+      '/dashboard',
+      '/concursos',
+      '/forum',
+      '/caderno', 
+      '/pomodoro',
+      '/spotify',
+      '/simulados',
+      '/subscription'
+    ]
+
+    if (protectedRoutes.some(route => pathname.startsWith(route))) {
+      const url = new URL('/auth/signin', req.url)
+      url.searchParams.set('callbackUrl', pathname)
+      return NextResponse.redirect(url)
     }
-  )
+  }
 
-  // Verificar sessão
-  const { data: { session } } = await supabase.auth.getSession()
-
-  // Verificar autenticação para rotas protegidas de API
+  // Para APIs protegidas
   if (pathname.startsWith('/api/') && !pathname.startsWith('/api/auth/')) {
-    if (!session) {
+    if (!token) {
       return NextResponse.json(
         { error: 'Não autenticado' },
         { status: 401 }
       )
-    }
-
-    // Adicionar user ID aos headers para as APIs
-    const requestHeaders = new Headers(req.headers)
-    requestHeaders.set('x-user-id', session.user.id)
-    
-    return NextResponse.next({
-      request: {
-        headers: requestHeaders,
-      },
-    })
-  }
-
-  // Verificar acesso a páginas protegidas
-  const protectedRoutes = [
-    '/dashboard',
-    '/concursos',
-    '/forum',
-    '/caderno', 
-    '/pomodoro',
-    '/spotify',
-    '/simulados',
-    '/subscription'
-  ]
-
-  if (protectedRoutes.some(route => pathname.startsWith(route))) {
-    if (!session) {
-      const url = new URL('/auth/signin', req.url)
-      url.searchParams.set('callbackUrl', pathname)
-      return NextResponse.redirect(url)
     }
   }
 

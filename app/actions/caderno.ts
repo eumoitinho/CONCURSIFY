@@ -1,6 +1,6 @@
 'use server'
 
-import { createServerSupabaseClient } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
 import { markdownParser } from '@/lib/caderno/markdown-parser'
 import { SubscriptionLimits, checkFeatureAccess } from '@/lib/middleware/subscription-check'
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
@@ -8,7 +8,7 @@ import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
-const supabase = createServerSupabaseClient()
+const supabase = createServerClient()
 
 // Schemas de validação
 const CreateNoteSchema = z.object({

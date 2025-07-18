@@ -3,12 +3,12 @@
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
-import { createServerSupabaseClient } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
 import { spotifyClient } from '@/lib/spotify/spotify-client'
 import { playlistAI } from '@/lib/spotify/playlist-ai'
 import { z } from 'zod'
 
-const supabase = createServerSupabaseClient()
+const supabase = createServerClient()
 
 // Schemas de validação
 const GeneratePlaylistSchema = z.object({

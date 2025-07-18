@@ -1,11 +1,11 @@
 'use server'
 
-import { createServerSupabaseClient } from '@/lib/supabase'
+import { createServerClient } from '@/lib/supabase'
 import { questionsScraper, QuestaoData } from '@/lib/scraping/questions-scraper'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
-const supabase = createServerSupabaseClient()
+const supabase = createServerClient()
 
 // Schema para filtros de busca de questões
 const BuscaQuestoesSchema = z.object({
