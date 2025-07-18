@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { SubscriptionLimits, FeatureType } from '@/lib/subscription/limits'
 
+// Re-export SubscriptionLimits for other modules
+export { SubscriptionLimits }
+
 export interface SubscriptionCheckConfig {
   feature: FeatureType
   timeframe?: 'daily' | 'monthly'

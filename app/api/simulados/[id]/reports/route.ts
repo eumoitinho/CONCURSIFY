@@ -14,7 +14,8 @@ export async function POST(
 ) {
   try {
     const session = await getServerSession()
-    if (!session?.user?.id) {
+    const userId = (session?.user as any)?.id
+    if (!userId) {
       return NextResponse.json(
         { error: 'Não autenticado' },
         { status: 401 }
@@ -22,7 +23,7 @@ export async function POST(
     }
 
     // Verificar acesso à feature de simulados
-    const accessCheck = await checkFeatureAccess(session.user.id, 'simulados')
+    const accessCheck = await checkFeatureAccess(userId, 'simulados')
     if (!accessCheck.allowed) {
       return NextResponse.json({
         error: accessCheck.error,
@@ -51,7 +52,7 @@ export async function POST(
         )
       `)
       .eq('id', params.id)
-      .eq('user_id', session.user.id)
+      .eq('user_id', userId)
       .single()
 
     if (error || !simulado) {
@@ -81,13 +82,13 @@ export async function POST(
     }
 
     // Calcular estatísticas
-    const acertos = respostas.filter(r => r.resposta_usuario === r.resposta_correta).length
+    const acertos = respostas.filter((r: any) => r.resposta_usuario === r.resposta_correta).length
     const pontuacaoGeral = (acertos / totalQuestoes) * 100
 
     // Agrupar por matéria
     const performancePorMateria: Record<string, { acertos: number; total: number; percentual: number }> = {}
     
-    respostas.forEach(r => {
+    respostas.forEach((r: any) => {
       const materia = r.questoes.materia
       if (!performancePorMateria[materia]) {
         performancePorMateria[materia] = { acertos: 0, total: 0, percentual: 0 }
@@ -99,7 +100,7 @@ export async function POST(
     })
 
     // Calcular percentuais
-    Object.keys(performancePorMateria).forEach(materia => {
+    Object.keys(performancePorMateria).forEach((materia: string) => {
       const stats = performancePorMateria[materia]
       stats.percentual = (stats.acertos / stats.total) * 100
     })
@@ -121,7 +122,7 @@ export async function POST(
           : 0,
         data_realizacao: simulado.tempo_fim || simulado.created_at
       },
-      respostas: respostas.map(r => ({
+      respostas: respostas.map((r: any) => ({
         questao_id: r.questao_id,
         questao_texto: r.questoes.texto,
         resposta_usuario: r.resposta_usuario,
@@ -140,9 +141,9 @@ export async function POST(
         recomendacoes: generateRecomendacoes(performancePorMateria, pontuacaoGeral),
         tempo_medio_por_questao: tempoMedioPorQuestao,
         questoes_mais_demoradas: respostas
-          .sort((a, b) => b.tempo_resposta - a.tempo_resposta)
+          .sort((a: any, b: any) => b.tempo_resposta - a.tempo_resposta)
           .slice(0, 3)
-          .map(r => ({
+          .map((r: any) => ({
             questao_id: r.questao_id,
             tempo: r.tempo_resposta,
             materia: r.questoes.materia
@@ -152,9 +153,14 @@ export async function POST(
           materias_prioritarias: Object.entries(performancePorMateria)
             .filter(([, stats]) => stats.percentual < 60)
             .map(([materia]) => materia),
-          tempo_estudo_sugerido: pontuacaoGeral < 50 ? 'intensivo' : pontuacaoGeral < 70 ? 'moderado' : 'revisao',
-          proximos_passos: generateProximosPassos(performancePorMateria, pontuacaoGeral)
+          tempo_sugerido_por_materia: {},
+          proximos_assuntos: generateProximosPassos(performancePorMateria, pontuacaoGeral)
         }
+      },
+      usuario: {
+        nome: (session?.user as any)?.name || 'Usuário',
+        email: (session?.user as any)?.email || '',
+        plano: 'free'
       }
     }
 

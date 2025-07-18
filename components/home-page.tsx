@@ -287,10 +287,10 @@ export function HomePage() {
                 <div className="right-nav flex items-center justify-end space-x-4">
                   <div className="right-btn hidden md:block">
                     <div className="flex items-center space-x-4">
-                      <a href="/cadastro" className="theme_btn free_btn text-sm px-4 py-2">Teste Grátis</a>
-                      <a className="sign-in" href="/login">
+                      <Link href="/cadastro" className="theme_btn free_btn text-sm px-4 py-2">Teste Grátis</Link>
+                      <Link className="sign-in" href="/auth/signin">
                         <User className="h-5 w-5" />
-                      </a>
+                      </Link>
                     </div>
                   </div>
                   <div className="hamburger-menu block lg:hidden">
@@ -340,8 +340,8 @@ export function HomePage() {
           </div>
           <div className="offset-widget">
             <div className="flex space-x-4 mt-6">
-              <a href="/cadastro" className="flex-1 text-center py-2 px-4 bg-[#FF723A] text-white rounded">Teste Grátis</a>
-              <a href="/login" className="flex-1 text-center py-2 px-4 border border-[#FF723A] text-[#FF723A] rounded">Login</a>
+              <Link href="/cadastro" className="flex-1 text-center py-2 px-4 bg-[#FF723A] text-white rounded">Teste Grátis</Link>
+              <Link href="/auth/signin" className="flex-1 text-center py-2 px-4 border border-[#FF723A] text-[#FF723A] rounded">Login</Link>
             </div>
           </div>
         </div>

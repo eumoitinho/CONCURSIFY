@@ -4,10 +4,16 @@ import { stripe, STRIPE_CONFIG } from '@/lib/stripe/config'
 import { createClient } from '@supabase/supabase-js'
 import Stripe from 'stripe'
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+function getSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Supabase configuration missing')
+  }
+  
+  return createClient(supabaseUrl, supabaseKey)
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -37,6 +43,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    const supabase = getSupabaseClient()
+
     // Verificar se já processamos este evento
     const { data: existingEvent } = await supabase
       .from('stripe_webhooks')
@@ -61,24 +69,24 @@ export async function POST(request: NextRequest) {
     // Processar evento baseado no tipo
     switch (event.type) {
       case 'checkout.session.completed':
-        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session)
+        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session, supabase)
         break
 
       case 'customer.subscription.created':
       case 'customer.subscription.updated':
-        await handleSubscriptionUpdated(event.data.object as Stripe.Subscription)
+        await handleSubscriptionUpdated(event.data.object as Stripe.Subscription, supabase)
         break
 
       case 'customer.subscription.deleted':
-        await handleSubscriptionDeleted(event.data.object as Stripe.Subscription)
+        await handleSubscriptionDeleted(event.data.object as Stripe.Subscription, supabase)
         break
 
       case 'invoice.payment_succeeded':
-        await handlePaymentSucceeded(event.data.object as Stripe.Invoice)
+        await handlePaymentSucceeded(event.data.object as Stripe.Invoice, supabase)
         break
 
       case 'invoice.payment_failed':
-        await handlePaymentFailed(event.data.object as Stripe.Invoice)
+        await handlePaymentFailed(event.data.object as Stripe.Invoice, supabase)
         break
 
       default:
@@ -105,7 +113,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+async function handleCheckoutCompleted(session: Stripe.Checkout.Session, supabase: any) {
   const userId = session.metadata?.userId
   
   if (!userId || !session.subscription) {
@@ -114,10 +122,10 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   }
 
   const subscription = await stripe.subscriptions.retrieve(session.subscription as string)
-  await updateUserSubscription(subscription, userId)
+  await updateUserSubscription(subscription, userId, supabase)
 }
 
-async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
+async function handleSubscriptionUpdated(subscription: Stripe.Subscription, supabase: any) {
   const userId = subscription.metadata?.userId
   
   if (!userId) {
@@ -125,10 +133,10 @@ async function handleSubscriptionUpdated(subscription: Stripe.Subscription) {
     return
   }
 
-  await updateUserSubscription(subscription, userId)
+  await updateUserSubscription(subscription, userId, supabase)
 }
 
-async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+async function handleSubscriptionDeleted(subscription: Stripe.Subscription, supabase: any) {
   const { error } = await supabase
     .from('user_subscriptions')
     .update({
@@ -143,7 +151,7 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   }
 }
 
-async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
+async function handlePaymentSucceeded(invoice: Stripe.Invoice, supabase: any) {
   if (!invoice.subscription) return
 
   const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string)
@@ -164,10 +172,10 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
     })
 
   // Atualizar subscription se necessário
-  await updateUserSubscription(subscription, userId)
+  await updateUserSubscription(subscription, userId, supabase)
 }
 
-async function handlePaymentFailed(invoice: Stripe.Invoice) {
+async function handlePaymentFailed(invoice: Stripe.Invoice, supabase: any) {
   if (!invoice.subscription) return
 
   const subscription = await stripe.subscriptions.retrieve(invoice.subscription as string)
@@ -197,7 +205,7 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
     .eq('stripe_subscription_id', subscription.id)
 }
 
-async function updateUserSubscription(subscription: Stripe.Subscription, userId: string) {
+async function updateUserSubscription(subscription: Stripe.Subscription, userId: string, supabase: any) {
   const priceId = subscription.items.data[0]?.price.id
   
   // Buscar o plano baseado no price ID

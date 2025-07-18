@@ -6,19 +6,20 @@ import { createServerSupabaseClient } from '@/lib/supabase'
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession()
-    if (!session?.user?.id) {
+    const userId = (session?.user as any)?.id
+    if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     // Gerar state único para segurança
-    const state = `${session.user.id}-${Date.now()}-${Math.random().toString(36).substring(7)}`
+    const state = `${userId}-${Date.now()}-${Math.random().toString(36).substring(7)}`
     
     // Salvar state no Supabase para validação posterior
     const supabase = createServerSupabaseClient()
     await supabase
       .from('user_sessions')
       .upsert({
-        user_id: session.user.id,
+        user_id: userId,
         session_data: { spotify_oauth_state: state },
         expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString() // 10 minutos
       })

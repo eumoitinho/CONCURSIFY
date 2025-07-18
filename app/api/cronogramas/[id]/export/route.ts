@@ -7,8 +7,6 @@ import { WhatsAppExport } from '@/lib/exports/whatsapp-export'
 import { SubscriptionLimits } from '@/lib/subscription/limits'
 import '@/lib/auth'
 
-const supabase = createServerSupabaseClient()
-
 export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -23,6 +21,7 @@ export async function GET(
       )
     }
 
+    const supabase = createServerSupabaseClient()
     const { searchParams } = new URL(req.url)
     const formato = searchParams.get('formato') // 'pdf', 'ics', 'whatsapp'
     const tipo = searchParams.get('tipo') // 'cronograma', 'semanal', 'diario'
@@ -141,6 +140,7 @@ export async function POST(
       )
     }
 
+    const supabase = createServerSupabaseClient()
     const body = await req.json()
     const { dataInicio } = body
 
