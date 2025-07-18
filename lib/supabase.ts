@@ -21,7 +21,17 @@ export const createClientSupabaseClient = () => {
     throw new Error('Supabase configuration missing')
   }
   
-  return createClient(supabaseUrl, supabaseKey)
+  return createClient(supabaseUrl, supabaseKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+    },
+    global: {
+      headers: {
+        'Accept': 'application/json'
+      }
+    }
+  })
 }
 
 // Cliente padrão para uso em client-side

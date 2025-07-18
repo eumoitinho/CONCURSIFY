@@ -1,18 +1,28 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getToken } from 'next-auth/jwt'
-import { getFeatureFromPath } from '@/lib/middleware/subscription-check'
+import { createClient } from '@supabase/supabase-js'
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
+  
+  // Criar cliente Supabase
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      global: {
+        headers: {
+          cookie: req.headers.get('cookie') || '',
+        },
+      },
+    }
+  )
 
-  // Verificar autenticação para rotas protegidas
+  // Verificar sessão
+  const { data: { session } } = await supabase.auth.getSession()
+
+  // Verificar autenticação para rotas protegidas de API
   if (pathname.startsWith('/api/') && !pathname.startsWith('/api/auth/')) {
-    const token = await getToken({ 
-      req, 
-      secret: process.env.NEXTAUTH_SECRET 
-    })
-
-    if (!token) {
+    if (!session) {
       return NextResponse.json(
         { error: 'Não autenticado' },
         { status: 401 }
@@ -21,7 +31,7 @@ export async function middleware(req: NextRequest) {
 
     // Adicionar user ID aos headers para as APIs
     const requestHeaders = new Headers(req.headers)
-    requestHeaders.set('x-user-id', token.sub || '')
+    requestHeaders.set('x-user-id', session.user.id)
     
     return NextResponse.next({
       request: {
@@ -32,6 +42,7 @@ export async function middleware(req: NextRequest) {
 
   // Verificar acesso a páginas protegidas
   const protectedRoutes = [
+    '/dashboard',
     '/concursos',
     '/forum',
     '/caderno', 
@@ -42,12 +53,7 @@ export async function middleware(req: NextRequest) {
   ]
 
   if (protectedRoutes.some(route => pathname.startsWith(route))) {
-    const token = await getToken({ 
-      req, 
-      secret: process.env.NEXTAUTH_SECRET 
-    })
-
-    if (!token) {
+    if (!session) {
       const url = new URL('/auth/signin', req.url)
       url.searchParams.set('callbackUrl', pathname)
       return NextResponse.redirect(url)

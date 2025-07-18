@@ -9,7 +9,6 @@
     "start": "next start"
   },
   "dependencies": {
-    "@auth/supabase-adapter": "^1.10.0",
     "@emotion/is-prop-valid": "latest",
     "@google/generative-ai": "^0.24.1",
     "@hookform/resolvers": "^3.9.1",
@@ -60,7 +59,6 @@
     "lucide-react": "^0.454.0",
     "marked": "^16.1.0",
     "next": "15.2.4",
-    "next-auth": "^4.24.11",
     "next-themes": "^0.4.4",
     "pdfkit": "^0.17.1",
     "react": "^19",
