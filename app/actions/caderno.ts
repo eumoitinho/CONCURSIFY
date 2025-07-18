@@ -3,7 +3,8 @@
 import { createServerSupabaseClient } from '@/lib/supabase'
 import { markdownParser } from '@/lib/caderno/markdown-parser'
 import { SubscriptionLimits, checkFeatureAccess } from '@/lib/middleware/subscription-check'
-import { getServerSession } from 'next-auth'
+import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
@@ -51,7 +52,12 @@ export type CreateCanvasInput = z.infer<typeof CreateCanvasSchema>
 // Função para criar nota
 export async function createNote(input: CreateNoteInput) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -147,7 +153,12 @@ export async function createNote(input: CreateNoteInput) {
 // Função para atualizar nota
 export async function updateNote(input: UpdateNoteInput) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -254,7 +265,12 @@ export async function getNotes(filters: {
   offset?: number
 } = {}) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -331,7 +347,12 @@ export async function getNotes(filters: {
 // Função para buscar nota por slug
 export async function getNoteBySlug(slug: string) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -382,7 +403,12 @@ export async function getNoteBySlug(slug: string) {
 // Função para criar pasta
 export async function createFolder(input: CreateFolderInput) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -438,7 +464,12 @@ export async function createFolder(input: CreateFolderInput) {
 // Função para buscar pastas
 export async function getFolders() {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -471,7 +502,12 @@ export async function getFolders() {
 // Função para buscar tags populares
 export async function getPopularTags() {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -514,7 +550,12 @@ export async function getPopularTags() {
 // Função para buscar estatísticas do caderno
 export async function getCadernoStats() {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }

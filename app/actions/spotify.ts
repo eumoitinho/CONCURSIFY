@@ -1,6 +1,7 @@
 'use server'
 
-import { getServerSession } from 'next-auth'
+import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { createServerSupabaseClient } from '@/lib/supabase'
 import { spotifyClient } from '@/lib/spotify/spotify-client'
@@ -45,7 +46,12 @@ export type UpdateMusicPreferencesInput = z.infer<typeof UpdateMusicPreferencesS
  */
 export async function getSpotifyConnection() {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -110,7 +116,12 @@ export async function getSpotifyConnection() {
  */
 export async function disconnectSpotify() {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -138,7 +149,12 @@ export async function disconnectSpotify() {
  */
 export async function generatePlaylist(input: GeneratePlaylistInput) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -268,7 +284,12 @@ export async function getUserPlaylists(filters: {
   offset?: number
 } = {}) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -318,7 +339,12 @@ export async function getUserPlaylists(filters: {
  */
 export async function getPlaylistDetails(playlistId: string) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -350,7 +376,12 @@ export async function getPlaylistDetails(playlistId: string) {
  */
 export async function ratePlaylist(playlistId: string, rating: number, feedback?: string) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -387,7 +418,12 @@ export async function ratePlaylist(playlistId: string, rating: number, feedback?
  */
 export async function playPlaylist(playlistId: string, deviceId?: string) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -466,7 +502,12 @@ export async function resumePlayback() {
  */
 export async function getMusicPreferences() {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -494,7 +535,12 @@ export async function getMusicPreferences() {
  */
 export async function updateMusicPreferences(input: UpdateMusicPreferencesInput) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }

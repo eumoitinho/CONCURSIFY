@@ -3,7 +3,8 @@
 import { createServerSupabaseClient } from '@/lib/supabase'
 import { geminiAI, UserPreferences, CronogramaData } from '@/lib/ai/gemini'
 import { SubscriptionLimits, checkFeatureAccess } from '@/lib/middleware/subscription-check'
-import { getServerSession } from 'next-auth'
+import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
@@ -26,7 +27,12 @@ const GerarCronogramaSchema = z.object({
 
 export async function gerarCronograma(input: z.infer<typeof GerarCronogramaSchema>) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -111,7 +117,12 @@ export async function gerarCronograma(input: z.infer<typeof GerarCronogramaSchem
 
 export async function buscarCronogramas(userId?: string) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     const targetUserId = userId || session?.user?.id
 
     if (!targetUserId) {
@@ -150,7 +161,12 @@ export async function buscarCronogramas(userId?: string) {
 
 export async function getCronogramaById(id: string) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -189,7 +205,12 @@ export async function getCronogramaById(id: string) {
 
 export async function deletarCronograma(id: string) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -219,7 +240,12 @@ export async function deletarCronograma(id: string) {
 
 export async function atualizarCronograma(id: string, updates: Partial<CronogramaData>) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -271,7 +297,12 @@ export async function atualizarCronograma(id: string, updates: Partial<Cronogram
 
 export async function gerarDicasPersonalizadas(materias: string[], nivelConhecimento: string) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -334,7 +365,12 @@ export async function gerarDicasPersonalizadas(materias: string[], nivelConhecim
 
 export async function getEstatisticasCronogramas(userId?: string) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     const targetUserId = userId || session?.user?.id
 
     if (!targetUserId) {

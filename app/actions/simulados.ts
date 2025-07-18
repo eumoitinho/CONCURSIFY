@@ -3,7 +3,8 @@
 import { createServerSupabaseClient } from '@/lib/supabase'
 import { simuladosAI, ConfiguracaoSimulado, AnalisePerformance } from '@/lib/ai/simulados-ai'
 import { SubscriptionLimits, checkFeatureAccess } from '@/lib/middleware/subscription-check'
-import { getServerSession } from 'next-auth'
+import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
@@ -39,7 +40,12 @@ export type ResponderSimuladoInput = z.infer<typeof ResponderSimuladoSchema>
 
 export async function criarSimulado(input: CriarSimuladoInput) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -145,7 +151,12 @@ export async function gerarSimuladoAdaptativo(preferenciasUsuario: {
   objetivos: string[]
 }) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -227,7 +238,12 @@ export async function gerarSimuladoAdaptativo(preferenciasUsuario: {
 
 export async function iniciarSimulado(simuladoId: string) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -302,7 +318,12 @@ export async function iniciarSimulado(simuladoId: string) {
 
 export async function responderSimulado(input: ResponderSimuladoInput) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -441,7 +462,12 @@ export async function buscarSimulados(filtros: {
   offset?: number
 } = {}) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -494,7 +520,12 @@ export async function buscarSimulados(filtros: {
 
 export async function getSimuladoById(id: string) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -551,7 +582,12 @@ export async function getSimuladoById(id: string) {
 
 export async function deletarSimulado(id: string) {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
@@ -588,7 +624,12 @@ export async function deletarSimulado(id: string) {
 
 export async function getEstatisticasSimulados() {
   try {
-    const session = await getServerSession()
+    const supabase = createServerActionClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return { success: false, error: 'Usuário não autenticado' }
+  }
     if (!session?.user?.id) {
       return { success: false, error: 'Usuário não autenticado' }
     }
