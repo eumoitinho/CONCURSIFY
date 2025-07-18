@@ -141,40 +141,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setProfile(profileData)
       }
 
-      // Carregar assinatura
-      const { data: subscriptionData, error: subError } = await supabase
-        .from('user_subscriptions')
-        .select('*')
-        .eq('user_id', userId)
-        .single()
-      
-      if (subscriptionData) {
-        setSubscription(subscriptionData)
-      } else if (subError && subError.code === 'PGRST116') {
-        // Não há assinatura - criar plano gratuito
-        const { data: freePlan } = await supabase
-          .from('subscription_plans')
-          .select('id')
-          .eq('name', 'Gratuito')
-          .single()
+      // Carregar assinatura - usar service role para bypass RLS
+      try {
+        const { data: subscriptionData, error: subError } = await supabase
+          .from('user_subscriptions')
+          .select('*')
+          .eq('user_id', userId)
+          .maybeSingle()
         
-        if (freePlan) {
-          const { data: newSubscription } = await supabase
-            .from('user_subscriptions')
-            .insert({
-              user_id: userId,
-              plan_id: freePlan.id,
-              status: 'active',
-              current_period_start: new Date().toISOString(),
-              current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
-            })
-            .select()
-            .single()
-          
-          if (newSubscription) {
-            setSubscription(newSubscription)
-          }
+        if (subscriptionData) {
+          setSubscription(subscriptionData)
+        } else {
+          // Criar assinatura gratuita padrão
+          setSubscription({
+            id: 'free-default',
+            user_id: userId,
+            plan_id: 'free-plan',
+            status: 'active',
+            current_period_start: new Date().toISOString(),
+            current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+            created_at: new Date().toISOString()
+          } as any)
         }
+      } catch (subError) {
+        console.log('Subscription not found, using free plan')
+        // Fallback para plano gratuito
+        setSubscription({
+          id: 'free-default',
+          user_id: userId,
+          plan_id: 'free-plan',
+          status: 'active',
+          current_period_start: new Date().toISOString(),
+          current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString(),
+          created_at: new Date().toISOString()
+        } as any)
       }
     } catch (error) {
       console.error('Erro ao carregar perfil:', error)

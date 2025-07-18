@@ -25,10 +25,14 @@ export const createClientSupabaseClient = () => {
     auth: {
       persistSession: true,
       autoRefreshToken: true,
+      detectSessionInUrl: true,
+      flowType: 'pkce'
     },
     global: {
       headers: {
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Prefer': 'return=minimal'
       }
     }
   })
