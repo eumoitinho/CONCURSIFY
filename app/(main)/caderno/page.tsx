@@ -1,6 +1,8 @@
-import { Suspense } from 'react'
-import { getServerSession } from 'next-auth'
-import { redirect } from 'next/navigation'
+'use client'
+
+import { Suspense, useEffect, useState } from 'react'
+import { useAuth } from '@/contexts/auth-context'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -27,24 +29,71 @@ import {
 import { getNotes, getFolders, getPopularTags, getCadernoStats } from '@/app/actions/caderno'
 import { NoteGraph } from '@/components/caderno/note-graph'
 
-async function CadernoContent() {
-  const session = await getServerSession()
-  if (!session?.user?.id) {
-    redirect('/auth/signin')
+function CadernoContent() {
+  const { user, isLoading } = useAuth()
+  const router = useRouter()
+  const [notes, setNotes] = useState<any[]>([])
+  const [folders, setFolders] = useState<any[]>([])
+  const [popularTags, setPopularTags] = useState<any[]>([])
+  const [stats, setStats] = useState<any>(null)
+  const [dataLoading, setDataLoading] = useState(true)
+  
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push('/auth/signin')
+      return
+    }
+    
+    if (user) {
+      loadData()
+    }
+  }, [user, isLoading, router])
+  
+  const loadData = async () => {
+    try {
+      setDataLoading(true)
+      // Buscar dados em paralelo
+      const [notesResult, foldersResult, tagsResult, statsResult] = await Promise.all([
+        getNotes({ limit: 100 }),
+        getFolders(),
+        getPopularTags(),
+        getCadernoStats()
+      ])
+
+      setNotes(notesResult.success ? notesResult.data : [])
+      setFolders(foldersResult.success ? foldersResult.data : [])
+      setPopularTags(tagsResult.success ? tagsResult.data : [])
+      setStats(statsResult.success ? statsResult.data : null)
+    } catch (error) {
+      console.error('Error loading caderno data:', error)
+    } finally {
+      setDataLoading(false)
+    }
   }
-
-  // Buscar dados em paralelo
-  const [notesResult, foldersResult, tagsResult, statsResult] = await Promise.all([
-    getNotes({ limit: 100 }),
-    getFolders(),
-    getPopularTags(),
-    getCadernoStats()
-  ])
-
-  const notes = notesResult.success ? notesResult.data : []
-  const folders = foldersResult.success ? foldersResult.data : []
-  const popularTags = tagsResult.success ? tagsResult.data : []
-  const stats = statsResult.success ? statsResult.data : null
+  
+  if (isLoading || dataLoading) {
+    return (
+      <div className="container mx-auto py-8">
+        <div className="animate-pulse space-y-6">
+          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
+          <div className="grid grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-32 bg-gray-200 rounded"></div>
+            ))}
+          </div>
+          <div className="space-y-4">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-24 bg-gray-200 rounded"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
+  if (!user) {
+    return null
+  }
 
   // Separar notas por tipo
   const recentNotes = notes
@@ -518,25 +567,5 @@ async function CadernoContent() {
 }
 
 export default function CadernoPage() {
-  return (
-    <Suspense fallback={
-      <div className="container mx-auto py-8">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-          <div className="grid grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-          <div className="space-y-4">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-24 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    }>
-      <CadernoContent />
-    </Suspense>
-  )
+  return <CadernoContent />
 }

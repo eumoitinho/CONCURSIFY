@@ -1,5 +1,7 @@
-import { Suspense } from 'react'
-import { getServerSession } from 'next-auth'
+'use client'
+
+import { Suspense, useEffect, useState } from 'react'
+import { useAuth } from '@/contexts/auth-context'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -22,17 +24,53 @@ import { ThreadCard } from '@/components/forum/thread-card'
 import { CreateThreadDialog } from '@/components/forum/create-thread-dialog'
 import { getThreads, getCategories } from '@/app/actions/forum'
 
-async function ForumContent() {
-  const session = await getServerSession()
+function ForumContent() {
+  const { user, isLoading } = useAuth()
+  const [threads, setThreads] = useState<any[]>([])
+  const [categories, setCategories] = useState<any[]>([])
+  const [dataLoading, setDataLoading] = useState(true)
   
-  // Buscar dados em paralelo
-  const [threadsResult, categoriesResult] = await Promise.all([
-    getThreads({ limit: 20 }),
-    getCategories()
-  ])
+  useEffect(() => {
+    loadData()
+  }, [])
+  
+  const loadData = async () => {
+    try {
+      setDataLoading(true)
+      // Buscar dados em paralelo
+      const [threadsResult, categoriesResult] = await Promise.all([
+        getThreads({ limit: 20 }),
+        getCategories()
+      ])
 
-  const threads = threadsResult.success ? threadsResult.data : []
-  const categories = categoriesResult.success ? categoriesResult.data : []
+      setThreads(threadsResult.success ? threadsResult.data : [])
+      setCategories(categoriesResult.success ? categoriesResult.data : [])
+    } catch (error) {
+      console.error('Error loading forum data:', error)
+    } finally {
+      setDataLoading(false)
+    }
+  }
+  
+  if (isLoading || dataLoading) {
+    return (
+      <div className="container mx-auto py-8">
+        <div className="animate-pulse space-y-6">
+          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
+          <div className="grid grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-32 bg-gray-200 rounded"></div>
+            ))}
+          </div>
+          <div className="space-y-4">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="h-32 bg-gray-200 rounded"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   // Estatísticas simuladas - em produção viria do banco
   const stats = {
@@ -66,7 +104,7 @@ async function ForumContent() {
           </p>
         </div>
         
-        {session?.user && (
+        {user && (
           <CreateThreadDialog categories={categories} />
         )}
       </div>
@@ -218,7 +256,7 @@ async function ForumContent() {
                       <p className="text-gray-500 mb-4">
                         Seja o primeiro a iniciar uma discussão!
                       </p>
-                      {session?.user && (
+                      {user && (
                         <CreateThreadDialog 
                           categories={categories}
                           trigger={
@@ -318,7 +356,7 @@ async function ForumContent() {
               <CardTitle>Ações Rápidas</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              {session?.user ? (
+              {user ? (
                 <>
                   <CreateThreadDialog 
                     categories={categories}
@@ -390,25 +428,5 @@ async function ForumContent() {
 }
 
 export default function ForumPage() {
-  return (
-    <Suspense fallback={
-      <div className="container mx-auto py-8">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-          <div className="grid grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-          <div className="space-y-4">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    }>
-      <ForumContent />
-    </Suspense>
-  )
+  return <ForumContent />
 }

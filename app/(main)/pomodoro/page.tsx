@@ -1,6 +1,8 @@
-import { Suspense } from 'react'
-import { getServerSession } from 'next-auth'
-import { redirect } from 'next/navigation'
+'use client'
+
+import { Suspense, useEffect, useState } from 'react'
+import { useAuth } from '@/contexts/auth-context'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -28,22 +30,73 @@ import { PomodoroSettings } from '@/components/pomodoro/pomodoro-settings'
 import { SessionCreateForm } from '@/components/pomodoro/session-create-form'
 import { PomodoroStats } from '@/components/pomodoro/pomodoro-stats'
 
-async function PomodoroContent() {
-  const session = await getServerSession()
-  if (!session?.user?.id) {
-    redirect('/auth/signin')
+function PomodoroContent() {
+  const { user, isLoading } = useAuth()
+  const router = useRouter()
+  const [stats, setStats] = useState<any>(null)
+  const [activeSession, setActiveSession] = useState<any>(null)
+  const [settings, setSettings] = useState<any>(null)
+  const [dataLoading, setDataLoading] = useState(true)
+  
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push('/auth/signin')
+      return
+    }
+    
+    if (user) {
+      loadData()
+    }
+  }, [user, isLoading, router])
+  
+  const loadData = async () => {
+    try {
+      setDataLoading(true)
+      // Buscar dados em paralelo
+      const [statsResult, activeSessionResult, settingsResult] = await Promise.all([
+        getPomodoroStats(),
+        getActiveSession(),
+        getSettings()
+      ])
+
+      setStats(statsResult.success ? statsResult.data : null)
+      setActiveSession(activeSessionResult.success ? activeSessionResult.data : null)
+      setSettings(settingsResult.success ? settingsResult.data : null)
+    } catch (error) {
+      console.error('Error loading pomodoro data:', error)
+    } finally {
+      setDataLoading(false)
+    }
   }
-
-  // Buscar dados em paralelo
-  const [statsResult, activeSessionResult, settingsResult] = await Promise.all([
-    getPomodoroStats(),
-    getActiveSession(),
-    getSettings()
-  ])
-
-  const stats = statsResult.success ? statsResult.data : null
-  const activeSession = activeSessionResult.success ? activeSessionResult.data : null
-  const settings = settingsResult.success ? settingsResult.data : null
+  
+  if (isLoading || dataLoading) {
+    return (
+      <div className="container mx-auto py-8">
+        <div className="animate-pulse space-y-6">
+          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
+          <div className="grid grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-32 bg-gray-200 rounded"></div>
+            ))}
+          </div>
+          <div className="grid grid-cols-3 gap-8">
+            <div className="col-span-2 space-y-4">
+              <div className="h-96 bg-gray-200 rounded"></div>
+            </div>
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-48 bg-gray-200 rounded"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
+  if (!user) {
+    return null
+  }
 
   return (
     <div className="container mx-auto py-8 space-y-8">
@@ -387,30 +440,5 @@ async function PomodoroContent() {
 }
 
 export default function PomodoroPage() {
-  return (
-    <Suspense fallback={
-      <div className="container mx-auto py-8">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-          <div className="grid grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-          <div className="grid grid-cols-3 gap-8">
-            <div className="col-span-2 space-y-4">
-              <div className="h-96 bg-gray-200 rounded"></div>
-            </div>
-            <div className="space-y-4">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-48 bg-gray-200 rounded"></div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    }>
-      <PomodoroContent />
-    </Suspense>
-  )
+  return <PomodoroContent />
 }

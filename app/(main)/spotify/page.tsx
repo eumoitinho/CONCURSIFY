@@ -1,6 +1,8 @@
-import { Suspense } from 'react'
-import { getServerSession } from 'next-auth'
-import { redirect } from 'next/navigation'
+'use client'
+
+import { Suspense, useEffect, useState } from 'react'
+import { useAuth } from '@/contexts/auth-context'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -29,23 +31,75 @@ import { SpotifyPlayer } from '@/components/spotify/spotify-player'
 import { PlaylistLibrary } from '@/components/spotify/playlist-library'
 import { MusicPreferences } from '@/components/spotify/music-preferences'
 
-async function SpotifyContent() {
-  const session = await getServerSession()
-  if (!session?.user?.id) {
-    redirect('/auth/signin')
+function SpotifyContent() {
+  const { user, isLoading } = useAuth()
+  const router = useRouter()
+  const [connection, setConnection] = useState<any>(null)
+  const [playlists, setPlaylists] = useState<any[]>([])
+  const [preferences, setPreferences] = useState<any>(null)
+  const [dataLoading, setDataLoading] = useState(true)
+  
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push('/auth/signin')
+      return
+    }
+    
+    if (user) {
+      loadData()
+    }
+  }, [user, isLoading, router])
+  
+  const loadData = async () => {
+    try {
+      setDataLoading(true)
+      // Buscar dados em paralelo
+      const [connectionResult, playlistsResult, preferencesResult] = await Promise.all([
+        getSpotifyConnection(),
+        getUserPlaylists({ limit: 10 }),
+        getMusicPreferences()
+      ])
+
+      setConnection(connectionResult.success ? connectionResult.data : null)
+      setPlaylists(playlistsResult.success ? playlistsResult.data : [])
+      setPreferences(preferencesResult.success ? preferencesResult.data : null)
+    } catch (error) {
+      console.error('Error loading spotify data:', error)
+    } finally {
+      setDataLoading(false)
+    }
   }
-
-  // Buscar dados em paralelo
-  const [connectionResult, playlistsResult, preferencesResult] = await Promise.all([
-    getSpotifyConnection(),
-    getUserPlaylists({ limit: 10 }),
-    getMusicPreferences()
-  ])
-
-  const isConnected = connectionResult.success && connectionResult.data
-  const connection = connectionResult.data
-  const playlists = playlistsResult.success ? playlistsResult.data : []
-  const preferences = preferencesResult.success ? preferencesResult.data : null
+  
+  if (isLoading || dataLoading) {
+    return (
+      <div className="container mx-auto py-8">
+        <div className="animate-pulse space-y-6">
+          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
+          <div className="grid grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-32 bg-gray-200 rounded"></div>
+            ))}
+          </div>
+          <div className="grid grid-cols-3 gap-8">
+            <div className="col-span-2 space-y-4">
+              <div className="h-96 bg-gray-200 rounded"></div>
+            </div>
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-48 bg-gray-200 rounded"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+  
+  if (!user) {
+    return null
+  }
+  
+  const isConnected = connection && connection.id
 
   return (
     <div className="container mx-auto py-8 space-y-8">
@@ -418,30 +472,5 @@ async function SpotifyContent() {
 }
 
 export default function SpotifyPage() {
-  return (
-    <Suspense fallback={
-      <div className="container mx-auto py-8">
-        <div className="animate-pulse space-y-6">
-          <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-          <div className="grid grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-32 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-          <div className="grid grid-cols-3 gap-8">
-            <div className="col-span-2 space-y-4">
-              <div className="h-96 bg-gray-200 rounded"></div>
-            </div>
-            <div className="space-y-4">
-              {[...Array(3)].map((_, i) => (
-                <div key={i} className="h-48 bg-gray-200 rounded"></div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    }>
-      <SpotifyContent />
-    </Suspense>
-  )
+  return <SpotifyContent />
 }

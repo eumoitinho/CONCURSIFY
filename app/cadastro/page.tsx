@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { signIn, getProviders, getSession } from 'next-auth/react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '@/contexts/auth-context'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,16 +12,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Chrome, Mail, Loader2, UserPlus } from 'lucide-react'
 import Link from 'next/link'
 
-interface Provider {
-  id: string
-  name: string
-  type: string
-  signinUrl: string
-  callbackUrl: string
-}
-
 export default function SignUpPage() {
-  const [providers, setProviders] = useState<Record<string, Provider> | null>(null)
   const [loading, setLoading] = useState(false)
   const [googleLoading, setGoogleLoading] = useState(false)
   const [formData, setFormData] = useState({
@@ -36,33 +27,27 @@ export default function SignUpPage() {
   })
   const [acceptTerms, setAcceptTerms] = useState(false)
   const router = useRouter()
+  const { user, isLoading, signInWithGoogle, signUp } = useAuth()
 
   useEffect(() => {
-    const setupProviders = async () => {
-      const response = await getProviders()
-      setProviders(response)
-    }
-    setupProviders()
-
     // Check if user is already signed in
-    const checkSession = async () => {
-      const session = await getSession()
-      if (session) {
-        router.push('/dashboard')
-      }
+    if (!isLoading && user) {
+      router.push('/dashboard')
     }
-    checkSession()
-  }, [router])
+  }, [user, isLoading, router])
 
   const handleGoogleSignUp = async () => {
     setGoogleLoading(true)
     try {
-      await signIn('google', {
-        callbackUrl: '/dashboard',
-        redirect: true
-      })
+      const { error } = await signInWithGoogle()
+      if (error) {
+        console.error('Error signing up with Google:', error)
+        alert('Erro ao cadastrar com Google: ' + error.message)
+      }
+      // Note: redirect is handled automatically by auth context
     } catch (error) {
       console.error('Error signing up with Google:', error)
+      alert('Erro ao cadastrar com Google')
     } finally {
       setGoogleLoading(false)
     }
@@ -91,39 +76,28 @@ export default function SignUpPage() {
     setLoading(true)
     
     try {
-      const response = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-          nome: formData.name,
-          telefone: formData.telefone,
-          concursos_interesse: formData.concursos_interesse,
-          nivel_estudos: formData.nivel_estudos
-        })
+      const { user, error } = await signUp(formData.email, formData.password, {
+        name: formData.name,
+        telefone: formData.telefone,
+        concursos_interesse: formData.concursos_interesse,
+        nivel_estudos: formData.nivel_estudos
       })
 
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Erro ao criar conta')
+      if (error) {
+        throw error
       }
 
       // Sucesso no cadastro
-      if (data.needsConfirmation) {
+      if (user && !user.email_confirmed_at) {
         // Usuário precisa confirmar email
         router.push('/auth/signin?message=confirm-email')
       } else {
-        // Pode fazer login imediatamente
-        router.push('/auth/signin?message=account-created')
+        // Pode fazer login imediatamente ou já está logado
+        router.push('/dashboard')
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error signing up:', error)
-      // Você pode adicionar um toast ou state para mostrar o erro
-      alert(error instanceof Error ? error.message : 'Erro ao criar conta')
+      alert(error?.message || 'Erro ao criar conta')
     } finally {
       setLoading(false)
     }
@@ -155,21 +129,19 @@ export default function SignUpPage() {
         
         <CardContent className="space-y-6">
           {/* Google Sign Up */}
-          {providers?.google && (
-            <Button
-              onClick={handleGoogleSignUp}
-              disabled={googleLoading}
-              className="w-full"
-              variant="outline"
-            >
-              {googleLoading ? (
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              ) : (
-                <Chrome className="mr-2 h-4 w-4" />
-              )}
-              Cadastrar com Google
-            </Button>
-          )}
+          <Button
+            onClick={handleGoogleSignUp}
+            disabled={googleLoading || isLoading}
+            className="w-full"
+            variant="outline"
+          >
+            {googleLoading ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Chrome className="mr-2 h-4 w-4" />
+            )}
+            Cadastrar com Google
+          </Button>
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
@@ -259,7 +231,7 @@ export default function SignUpPage() {
 
             <Button
               type="submit"
-              disabled={loading || !acceptTerms}
+              disabled={loading || !acceptTerms || isLoading}
               className="w-full"
             >
               {loading ? (
