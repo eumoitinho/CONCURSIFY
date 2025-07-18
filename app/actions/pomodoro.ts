@@ -1,13 +1,11 @@
 'use server'
 
-import { createServerSupabaseClient } from '@/lib/supabase'
+import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { adaptiveTimer, SessionContext } from '@/lib/pomodoro/adaptive-timer'
 import { SubscriptionLimits, checkFeatureAccess } from '@/lib/middleware/subscription-check'
-import { getServerSession } from 'next-auth'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
-
-const supabase = createServerSupabaseClient()
 
 // Schemas de validação
 const CreateSessionSchema = z.object({
@@ -73,13 +71,17 @@ export type UpdateSettingsInput = z.infer<typeof UpdateSettingsSchema>
 // Função para criar sessão
 export async function createSession(input: CreateSessionInput) {
   try {
-    const session = await getServerSession()
-    if (!session?.user?.id) {
+    const supabase = createServerActionClient({ cookies })
+    
+    // Verificar autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
     // Verificar acesso à feature
-    const accessCheck = await checkFeatureAccess(session.user.id, 'pomodoro')
+    const accessCheck = await checkFeatureAccess(user.id, 'pomodoro')
     if (!accessCheck.allowed) {
       return {
         success: false,
@@ -96,7 +98,7 @@ export async function createSession(input: CreateSessionInput) {
     const { data: newSession, error: sessionError } = await supabase
       .from('pomodoro_sessions')
       .insert({
-        user_id: session.user.id,
+        user_id: user.id,
         session_type: validatedInput.session_type,
         planned_duration: validatedInput.planned_duration,
         note_id: validatedInput.note_id,
@@ -118,7 +120,7 @@ export async function createSession(input: CreateSessionInput) {
     }
 
     // Registrar uso da feature
-    await SubscriptionLimits.trackFeatureUsage(session.user.id, 'pomodoro', {
+    await SubscriptionLimits.trackFeatureUsage(user.id, 'pomodoro', {
       session_type: validatedInput.session_type,
       duration: validatedInput.planned_duration
     })
@@ -145,8 +147,12 @@ export async function createSession(input: CreateSessionInput) {
 // Função para iniciar sessão
 export async function startSession(sessionId: string) {
   try {
-    const session = await getServerSession()
-    if (!session?.user?.id) {
+    const supabase = createServerActionClient({ cookies })
+    
+    // Verificar autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -157,7 +163,7 @@ export async function startSession(sessionId: string) {
         status: 'paused',
         paused_at: new Date().toISOString()
       })
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .eq('status', 'in_progress')
 
     // Iniciar a sessão selecionada
@@ -169,7 +175,7 @@ export async function startSession(sessionId: string) {
         paused_at: null
       })
       .eq('id', sessionId)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .select()
       .single()
 
@@ -197,8 +203,12 @@ export async function startSession(sessionId: string) {
 // Função para atualizar sessão
 export async function updateSession(input: UpdateSessionInput) {
   try {
-    const session = await getServerSession()
-    if (!session?.user?.id) {
+    const supabase = createServerActionClient({ cookies })
+    
+    // Verificar autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -234,7 +244,7 @@ export async function updateSession(input: UpdateSessionInput) {
       .from('pomodoro_sessions')
       .update(updateData)
       .eq('id', validatedInput.id)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .select()
       .single()
 
@@ -262,8 +272,12 @@ export async function updateSession(input: UpdateSessionInput) {
 // Função para adicionar interrupção
 export async function addInterruption(input: AddInterruptionInput) {
   try {
-    const session = await getServerSession()
-    if (!session?.user?.id) {
+    const supabase = createServerActionClient({ cookies })
+    
+    // Verificar autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -274,7 +288,7 @@ export async function addInterruption(input: AddInterruptionInput) {
       .from('pomodoro_sessions')
       .select('id')
       .eq('id', validatedInput.session_id)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .single()
 
     if (sessionError || !sessionData) {
@@ -325,8 +339,12 @@ export async function getSessions(filters: {
   offset?: number
 } = {}) {
   try {
-    const session = await getServerSession()
-    if (!session?.user?.id) {
+    const supabase = createServerActionClient({ cookies })
+    
+    // Verificar autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -339,7 +357,7 @@ export async function getSessions(filters: {
         session_interruptions(count),
         notes(title, slug)
       `)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false })
 
     if (status) {
@@ -381,8 +399,12 @@ export async function getSessions(filters: {
 // Função para buscar sessão ativa
 export async function getActiveSession() {
   try {
-    const session = await getServerSession()
-    if (!session?.user?.id) {
+    const supabase = createServerActionClient({ cookies })
+    
+    // Verificar autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -393,7 +415,7 @@ export async function getActiveSession() {
         notes(title, slug),
         session_interruptions(*)
       `)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .eq('status', 'in_progress')
       .single()
 
@@ -416,8 +438,12 @@ export async function getActiveSession() {
 // Função para obter recomendação adaptativa
 export async function getAdaptiveRecommendation(context: SessionContext) {
   try {
-    const session = await getServerSession()
-    if (!session?.user?.id) {
+    const supabase = createServerActionClient({ cookies })
+    
+    // Verificar autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -425,7 +451,7 @@ export async function getAdaptiveRecommendation(context: SessionContext) {
     const { data: sessions } = await supabase
       .from('pomodoro_sessions')
       .select('planned_duration, actual_duration, completion_percentage, productivity_score, focus_score, actual_start')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .eq('status', 'completed')
       .order('actual_start', { ascending: false })
       .limit(100)
@@ -469,8 +495,12 @@ export async function getAdaptiveRecommendation(context: SessionContext) {
 // Função para atualizar configurações
 export async function updateSettings(input: UpdateSettingsInput) {
   try {
-    const session = await getServerSession()
-    if (!session?.user?.id) {
+    const supabase = createServerActionClient({ cookies })
+    
+    // Verificar autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -479,7 +509,7 @@ export async function updateSettings(input: UpdateSettingsInput) {
     const { data, error } = await supabase
       .from('pomodoro_settings')
       .upsert({
-        user_id: session.user.id,
+        user_id: user.id,
         ...validatedInput,
         updated_at: new Date().toISOString()
       })
@@ -510,15 +540,19 @@ export async function updateSettings(input: UpdateSettingsInput) {
 // Função para buscar configurações
 export async function getSettings() {
   try {
-    const session = await getServerSession()
-    if (!session?.user?.id) {
+    const supabase = createServerActionClient({ cookies })
+    
+    // Verificar autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
     const { data, error } = await supabase
       .from('pomodoro_settings')
       .select('*')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .single()
 
     if (error && error.code !== 'PGRST116') {
@@ -550,8 +584,12 @@ export async function getSettings() {
 // Função para buscar estatísticas
 export async function getPomodoroStats() {
   try {
-    const session = await getServerSession()
-    if (!session?.user?.id) {
+    const supabase = createServerActionClient({ cookies })
+    
+    // Verificar autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -563,7 +601,7 @@ export async function getPomodoroStats() {
     const { data: weeklyStats } = await supabase
       .from('pomodoro_daily_stats')
       .select('*')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .gte('date', weekStart.toISOString().split('T')[0])
 
     // Buscar estatísticas do mês atual
@@ -574,14 +612,14 @@ export async function getPomodoroStats() {
     const { data: monthlyStats } = await supabase
       .from('pomodoro_daily_stats')
       .select('*')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .gte('date', monthStart.toISOString().split('T')[0])
 
     // Buscar conquistas
     const { data: achievements } = await supabase
       .from('pomodoro_achievements')
       .select('*')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .order('earned_at', { ascending: false })
       .limit(10)
 

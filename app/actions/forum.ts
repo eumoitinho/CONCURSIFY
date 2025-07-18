@@ -1,13 +1,11 @@
 'use server'
 
-import { createServerSupabaseClient } from '@/lib/supabase'
+import { createServerActionClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { forumModerationAI, ContentForModeration } from '@/lib/ai/forum-moderation'
 import { SubscriptionLimits, checkFeatureAccess } from '@/lib/middleware/subscription-check'
-import { getServerSession } from 'next-auth'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
-
-const supabase = createServerSupabaseClient()
 
 // Schemas de validação
 const CreateThreadSchema = z.object({
@@ -36,13 +34,17 @@ export type VoteInput = z.infer<typeof VoteSchema>
 // Função para criar thread
 export async function createThread(input: CreateThreadInput) {
   try {
-    const session = await getServerSession()
-    if (!session?.user?.id) {
+    const supabase = createServerActionClient({ cookies })
+    
+    // Verificar autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
     // Verificar acesso à feature
-    const accessCheck = await checkFeatureAccess(session.user.id, 'forum')
+    const accessCheck = await checkFeatureAccess(user.id, 'forum')
     if (!accessCheck.allowed) {
       return {
         success: false,
@@ -59,13 +61,13 @@ export async function createThread(input: CreateThreadInput) {
     const { data: userStats } = await supabase
       .from('forum_user_stats')
       .select('reputation_score')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .single()
 
     const { data: userViolations } = await supabase
       .from('forum_moderation_logs')
       .select('id')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .eq('action', 'auto_deleted')
 
     // Preparar conteúdo para moderação
@@ -91,7 +93,7 @@ export async function createThread(input: CreateThreadInput) {
       .insert({
         content_type: 'thread',
         content_id: 'pending', // Será atualizado após criação
-        user_id: session.user.id,
+        user_id: user.id,
         action: moderationResult.recommended_action,
         reason: moderationResult.explanation,
         confidence_score: moderationResult.confidence_score,
@@ -134,7 +136,7 @@ export async function createThread(input: CreateThreadInput) {
       .from('forum_threads')
       .insert({
         category_id: validatedInput.category_id,
-        user_id: session.user.id,
+        user_id: user.id,
         title: validatedInput.title,
         content: validatedInput.content,
         slug: slug,
@@ -159,10 +161,10 @@ export async function createThread(input: CreateThreadInput) {
       .from('forum_moderation_logs')
       .update({ content_id: thread.id })
       .eq('content_id', 'pending')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
 
     // Registrar uso da feature
-    await SubscriptionLimits.trackFeatureUsage(session.user.id, 'forum', {
+    await SubscriptionLimits.trackFeatureUsage(user.id, 'forum', {
       action: 'create_thread',
       category: validatedInput.category_id,
       moderation_status: threadStatus
@@ -198,8 +200,12 @@ export async function createThread(input: CreateThreadInput) {
 // Função para criar post
 export async function createPost(input: CreatePostInput) {
   try {
-    const session = await getServerSession()
-    if (!session?.user?.id) {
+    const supabase = createServerActionClient({ cookies })
+    
+    // Verificar autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -265,7 +271,7 @@ export async function createPost(input: CreatePostInput) {
       .from('forum_posts')
       .insert({
         thread_id: validatedInput.thread_id,
-        user_id: session.user.id,
+        user_id: user.id,
         parent_id: validatedInput.parent_id,
         content: validatedInput.content,
         status: postStatus,
@@ -287,7 +293,7 @@ export async function createPost(input: CreatePostInput) {
       .insert({
         content_type: 'post',
         content_id: post.id,
-        user_id: session.user.id,
+        user_id: user.id,
         action: moderationResult.recommended_action,
         reason: moderationResult.explanation,
         confidence_score: moderationResult.confidence_score,
@@ -300,7 +306,7 @@ export async function createPost(input: CreatePostInput) {
       })
 
     // Criar notificações para seguidores da thread
-    await createThreadNotifications(validatedInput.thread_id, session.user.id, post.id)
+    await createThreadNotifications(validatedInput.thread_id, user.id, post.id)
 
     revalidatePath(`/forum/thread/${validatedInput.thread_id}`)
 
@@ -324,8 +330,12 @@ export async function createPost(input: CreatePostInput) {
 // Função para votar em post
 export async function votePost(input: VoteInput) {
   try {
-    const session = await getServerSession()
-    if (!session?.user?.id) {
+    const supabase = createServerActionClient({ cookies })
+    
+    // Verificar autenticação
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -343,7 +353,7 @@ export async function votePost(input: VoteInput) {
     }
 
     // Não permitir votar no próprio post
-    if (post.user_id === session.user.id) {
+    if (post.user_id === user.id) {
       return { success: false, error: 'Você não pode votar no seu próprio post' }
     }
 
@@ -352,7 +362,7 @@ export async function votePost(input: VoteInput) {
       .from('forum_votes')
       .select('vote_type')
       .eq('post_id', validatedInput.post_id)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .single()
 
     if (existingVote) {
@@ -362,7 +372,7 @@ export async function votePost(input: VoteInput) {
           .from('forum_votes')
           .delete()
           .eq('post_id', validatedInput.post_id)
-          .eq('user_id', session.user.id)
+          .eq('user_id', user.id)
 
         return { success: true, message: 'Voto removido' }
       } else {
@@ -371,7 +381,7 @@ export async function votePost(input: VoteInput) {
           .from('forum_votes')
           .update({ vote_type: validatedInput.vote_type })
           .eq('post_id', validatedInput.post_id)
-          .eq('user_id', session.user.id)
+          .eq('user_id', user.id)
 
         return { success: true, message: 'Voto atualizado' }
       }
@@ -381,7 +391,7 @@ export async function votePost(input: VoteInput) {
         .from('forum_votes')
         .insert({
           post_id: validatedInput.post_id,
-          user_id: session.user.id,
+          user_id: user.id,
           vote_type: validatedInput.vote_type
         })
 
@@ -407,6 +417,7 @@ export async function getThreads(filters: {
   offset?: number
 } = {}) {
   try {
+    const supabase = createServerActionClient({ cookies })
     const { category_id, search, type, status = 'active', limit = 20, offset = 0 } = filters
 
     let query = supabase
@@ -467,6 +478,8 @@ export async function getThreads(filters: {
 // Função para buscar thread por ID
 export async function getThreadById(id: string) {
   try {
+    const supabase = createServerActionClient({ cookies })
+    
     const { data: thread, error } = await supabase
       .from('forum_threads')
       .select(`
@@ -512,6 +525,8 @@ export async function getThreadById(id: string) {
 // Função para buscar categorias
 export async function getCategories() {
   try {
+    const supabase = createServerActionClient({ cookies })
+    
     const { data, error } = await supabase
       .from('forum_categories')
       .select(`
@@ -539,6 +554,8 @@ export async function getCategories() {
 
 // Funções auxiliares
 async function generateUniqueSlug(title: string): Promise<string> {
+  const supabase = createServerActionClient({ cookies })
+  
   const baseSlug = title
     .toLowerCase()
     .replace(/[^\w\s-]/g, '')
@@ -565,6 +582,8 @@ async function generateUniqueSlug(title: string): Promise<string> {
 }
 
 async function createThreadNotifications(threadId: string, authorId: string, postId: string) {
+  const supabase = createServerActionClient({ cookies })
+  
   // Buscar seguidores da thread
   const { data: followers } = await supabase
     .from('forum_follows')
