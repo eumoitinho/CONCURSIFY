@@ -38,6 +38,7 @@ interface AuthContextType {
   signIn: (email: string, password: string) => Promise<{ user: User | null; error: AuthError | null }>
   signInWithGoogle: () => Promise<{ user: User | null; error: AuthError | null }>
   signOut: () => Promise<void>
+  resetPassword: (email: string) => Promise<{ error: AuthError | null }>
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>
   refreshProfile: () => Promise<void>
   isPremium: boolean
@@ -275,7 +276,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (error) throw error
       
-      return { user: data.user, error: null }
+      return { user: null, error: null } // OAuth redireciona, não retorna user diretamente
     } catch (error) {
       console.error('Erro no login com Google:', error)
       return { user: null, error: error as AuthError }
@@ -295,6 +296,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       router.push('/')
     } catch (error) {
       console.error('Erro no logout:', error)
+    }
+  }
+
+  // Função de recuperação de senha
+  const resetPassword = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/auth/reset-password`,
+      })
+      
+      if (error) throw error
+      
+      return { error: null }
+    } catch (error) {
+      console.error('Erro ao enviar email de recuperação:', error)
+      return { error: error as AuthError }
     }
   }
 
@@ -389,6 +406,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signIn,
         signInWithGoogle,
         signOut,
+        resetPassword,
         updateProfile,
         refreshProfile,
         isPremium,

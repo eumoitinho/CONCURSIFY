@@ -10,6 +10,8 @@ export async function middleware(req: NextRequest) {
     '/auth/signin',
     '/auth/signup',
     '/auth/callback',
+    '/auth/forgot-password',
+    '/auth/reset-password',
     '/cadastro',
     '/planos'
   ]

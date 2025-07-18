@@ -540,11 +540,11 @@ export function Dashboard() {
         <div className="flex h-full flex-col border-r">
           <div className="flex items-center justify-between p-4">
             <div className="flex items-center gap-3">
-              <div className="flex aspect-square size-10 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 text-white">
+              <div className="flex aspect-square size-10 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-600 to-red-600 text-white">
                 <GraduationCap className="size-5" />
               </div>
               <div>
-                <h2 className="font-semibold">ConcursoIA</h2>
+                <h2 className="font-semibold">Concursify</h2>
                 <p className="text-xs text-muted-foreground">Estude Inteligente</p>
               </div>
             </div>
@@ -646,11 +646,11 @@ export function Dashboard() {
         <div className="flex h-full flex-col">
           <div className="p-4">
             <div className="flex items-center gap-3">
-              <div className="flex aspect-square size-10 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-purple-600 text-white">
+              <div className="flex aspect-square size-10 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-600 to-red-600 text-white">
                 <GraduationCap className="size-5" />
               </div>
               <div>
-                <h2 className="font-semibold">ConcursoIA</h2>
+                <h2 className="font-semibold">Concursify</h2>
                 <p className="text-xs text-muted-foreground">Estude Inteligente</p>
               </div>
             </div>
@@ -749,7 +749,7 @@ export function Dashboard() {
             <PanelLeft className="h-5 w-5" />
           </Button>
           <div className="flex flex-1 items-center justify-between">
-            <h1 className="text-xl font-semibold">ConcursoIA</h1>
+            <h1 className="text-xl font-semibold">Concursify</h1>
             <div className="flex items-center gap-3">
               <TooltipProvider>
                 <Tooltip>
@@ -779,9 +779,9 @@ export function Dashboard() {
                     <Button variant="ghost" size="icon" className="rounded-2xl relative">
                       <Bell className="h-5 w-5" />
                       {notifications > 0 && (
-                        <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-                          {notifications}
-                        </span>
+                                              <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-orange-500 text-xs text-white">
+                        {notifications}
+                      </span>
                       )}
                     </Button>
                   </TooltipTrigger>
@@ -843,7 +843,7 @@ export function Dashboard() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="overflow-hidden rounded-3xl bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 p-8 text-white"
+                      className="overflow-hidden rounded-3xl bg-gradient-to-r from-orange-500 via-amber-500 to-red-500 p-8 text-white"
                     >
                       <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                         <div className="space-y-4">
@@ -851,13 +851,13 @@ export function Dashboard() {
                             <Bot className="mr-1 h-3 w-3" />
                             Powered by AI
                           </Badge>
-                          <h2 className="text-3xl font-bold">Bem-vindo ao ConcursoIA</h2>
+                          <h2 className="text-3xl font-bold">Bem-vindo ao Concursify</h2>
                           <p className="max-w-[600px] text-white/80">
                             Sua plataforma inteligente para buscar editais, gerar cronogramas personalizados e estudar
                             de forma eficiente para concursos públicos.
                           </p>
                           <div className="flex flex-wrap gap-3">
-                            <Button className="rounded-2xl bg-white text-indigo-700 hover:bg-white/90">
+                            <Button className="rounded-2xl bg-white text-orange-700 hover:bg-white/90">
                               <Search className="mr-2 h-4 w-4" />
                               Buscar Editais
                             </Button>
@@ -893,8 +893,8 @@ export function Dashboard() {
                     <Card className="rounded-3xl border-2 hover:border-primary/50 transition-all duration-300">
                       <CardHeader className="pb-2">
                         <div className="flex items-center justify-between">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100">
-                            <FileText className="h-6 w-6 text-blue-600" />
+                                                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-100">
+                          <FileText className="h-6 w-6 text-orange-600" />
                           </div>
                           <Badge variant="outline" className="rounded-xl">
                             Hoje
@@ -905,10 +905,10 @@ export function Dashboard() {
                         <div className="space-y-2">
                           <h3 className="text-2xl font-bold">127</h3>
                           <p className="text-sm text-muted-foreground">Editais Disponíveis</p>
-                          <div className="flex items-center text-xs text-green-600">
-                            <TrendingUp className="mr-1 h-3 w-3" />
-                            +12 novos hoje
-                          </div>
+                                                  <div className="flex items-center text-xs text-orange-600">
+                          <TrendingUp className="mr-1 h-3 w-3" />
+                          +12 novos hoje
+                        </div>
                         </div>
                       </CardContent>
                     </Card>
@@ -916,8 +916,8 @@ export function Dashboard() {
                     <Card className="rounded-3xl border-2 hover:border-primary/50 transition-all duration-300">
                       <CardHeader className="pb-2">
                         <div className="flex items-center justify-between">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-100">
-                            <Calendar className="h-6 w-6 text-purple-600" />
+                                                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-red-100">
+                          <Calendar className="h-6 w-6 text-red-600" />
                           </div>
                           <Badge variant="outline" className="rounded-xl">
                             Ativos
@@ -928,10 +928,10 @@ export function Dashboard() {
                         <div className="space-y-2">
                           <h3 className="text-2xl font-bold">3</h3>
                           <p className="text-sm text-muted-foreground">Cronogramas Ativos</p>
-                          <div className="flex items-center text-xs text-blue-600">
-                            <Bot className="mr-1 h-3 w-3" />
-                            Gerados com IA
-                          </div>
+                                                  <div className="flex items-center text-xs text-red-600">
+                          <Bot className="mr-1 h-3 w-3" />
+                          Gerados com IA
+                        </div>
                         </div>
                       </CardContent>
                     </Card>
@@ -939,8 +939,8 @@ export function Dashboard() {
                     <Card className="rounded-3xl border-2 hover:border-primary/50 transition-all duration-300">
                       <CardHeader className="pb-2">
                         <div className="flex items-center justify-between">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-green-100">
-                            <Clock className="h-6 w-6 text-green-600" />
+                                                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-100">
+                          <Clock className="h-6 w-6 text-amber-600" />
                           </div>
                           <Badge variant="outline" className="rounded-xl">
                             Esta semana
@@ -951,10 +951,10 @@ export function Dashboard() {
                         <div className="space-y-2">
                           <h3 className="text-2xl font-bold">28h</h3>
                           <p className="text-sm text-muted-foreground">Horas de Estudo</p>
-                          <div className="flex items-center text-xs text-green-600">
-                            <Target className="mr-1 h-3 w-3" />
-                            Meta: 30h/semana
-                          </div>
+                                                  <div className="flex items-center text-xs text-amber-600">
+                          <Target className="mr-1 h-3 w-3" />
+                          Meta: 30h/semana
+                        </div>
                         </div>
                       </CardContent>
                     </Card>
@@ -1004,8 +1004,8 @@ export function Dashboard() {
                                   <Badge variant="outline" className="rounded-xl">
                                     {edital.organization}
                                   </Badge>
-                                  {edital.new && <Badge className="rounded-xl bg-green-500">Novo</Badge>}
-                                  {edital.featured && <Badge className="rounded-xl bg-amber-500">Destaque</Badge>}
+                                  {edital.new && <Badge className="rounded-xl bg-orange-500">Novo</Badge>}
+                                  {edital.featured && <Badge className="rounded-xl bg-red-500">Destaque</Badge>}
                                 </div>
                                 <h3 className="font-semibold text-sm mb-1">{edital.title}</h3>
                                 <p className="text-xs text-muted-foreground mb-2">{edital.description}</p>
@@ -1058,12 +1058,12 @@ export function Dashboard() {
                                   <Badge variant="outline" className="rounded-xl">
                                     {cronograma.edital}
                                   </Badge>
-                                  {cronograma.aiGenerated && (
-                                    <Badge className="rounded-xl bg-purple-500">
-                                      <Bot className="mr-1 h-3 w-3" />
-                                      IA
-                                    </Badge>
-                                  )}
+                                                                  {cronograma.aiGenerated && (
+                                  <Badge className="rounded-xl bg-orange-500">
+                                    <Bot className="mr-1 h-3 w-3" />
+                                    IA
+                                  </Badge>
+                                )}
                                 </div>
                                 <h3 className="font-semibold text-sm mb-1">{cronograma.title}</h3>
                                 <div className="flex items-center gap-4 text-xs text-muted-foreground">
@@ -1124,8 +1124,8 @@ export function Dashboard() {
                             </Avatar>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-1">
-                                {post.pinned && <Pin className="h-3 w-3 text-amber-500" />}
-                                {post.solved && <CheckCircle className="h-3 w-3 text-green-500" />}
+                                {post.pinned && <Pin className="h-3 w-3 text-orange-500" />}
+                                {post.solved && <CheckCircle className="h-3 w-3 text-red-500" />}
                                 <Badge variant="outline" className="rounded-xl text-xs">
                                   {post.category}
                                 </Badge>
@@ -1158,7 +1158,7 @@ export function Dashboard() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="overflow-hidden rounded-3xl bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 p-8 text-white"
+                      className="overflow-hidden rounded-3xl bg-gradient-to-r from-orange-600 via-amber-600 to-yellow-600 p-8 text-white"
                     >
                       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                         <div className="space-y-2">
@@ -1173,7 +1173,7 @@ export function Dashboard() {
                             <RefreshCw className="mr-2 h-4 w-4" />
                             Atualizar Base
                           </Button>
-                          <Button className="rounded-2xl bg-white text-teal-700 hover:bg-white/90">
+                          <Button className="rounded-2xl bg-white text-orange-700 hover:bg-white/90">
                             <Bot className="mr-2 h-4 w-4" />
                             Busca com IA
                           </Button>
@@ -1265,12 +1265,12 @@ export function Dashboard() {
                                 <Badge variant="outline" className="rounded-xl">
                                   {edital.category}
                                 </Badge>
-                                {edital.new && <Badge className="rounded-xl bg-green-500">Novo</Badge>}
-                                {edital.featured && <Badge className="rounded-xl bg-amber-500">Destaque</Badge>}
+                                {edital.new && <Badge className="rounded-xl bg-orange-500">Novo</Badge>}
+                                {edital.featured && <Badge className="rounded-xl bg-red-500">Destaque</Badge>}
                                 <Badge
                                   className={cn(
                                     "rounded-xl",
-                                    edital.status === "Inscrições Abertas" ? "bg-green-500" : "bg-blue-500",
+                                    edital.status === "Inscrições Abertas" ? "bg-orange-500" : "bg-amber-500",
                                   )}
                                 >
                                   {edital.status}
@@ -1384,7 +1384,7 @@ export function Dashboard() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="overflow-hidden rounded-3xl bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-600 p-8 text-white"
+                      className="overflow-hidden rounded-3xl bg-gradient-to-r from-red-600 via-orange-600 to-amber-600 p-8 text-white"
                     >
                       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                         <div className="space-y-2">
@@ -1393,7 +1393,7 @@ export function Dashboard() {
                             Crie cronogramas personalizados com IA baseados no seu perfil e tempo disponível.
                           </p>
                         </div>
-                        <Button className="w-fit rounded-2xl bg-white text-indigo-700 hover:bg-white/90">
+                        <Button className="w-fit rounded-2xl bg-white text-red-700 hover:bg-white/90">
                           <Bot className="mr-2 h-4 w-4" />
                           Gerar com IA
                         </Button>
@@ -1452,7 +1452,7 @@ export function Dashboard() {
                                   {cronograma.edital}
                                 </Badge>
                                 {cronograma.aiGenerated && (
-                                  <Badge className="rounded-xl bg-purple-500">
+                                  <Badge className="rounded-xl bg-orange-500">
                                     <Bot className="mr-1 h-3 w-3" />
                                     IA
                                   </Badge>
@@ -1569,27 +1569,27 @@ export function Dashboard() {
                         <p className="text-xs text-muted-foreground">Formatado</p>
                       </Card>
                       <Card className="p-4 text-center hover:border-primary/50 transition-all duration-300 cursor-pointer">
-                        <Calendar className="h-8 w-8 mx-auto mb-2 text-blue-500" />
+                        <Calendar className="h-8 w-8 mx-auto mb-2 text-orange-500" />
                         <p className="text-sm font-medium">Google</p>
                         <p className="text-xs text-muted-foreground">Calendar</p>
                       </Card>
                       <Card className="p-4 text-center hover:border-primary/50 transition-all duration-300 cursor-pointer">
-                        <CalendarIcon className="h-8 w-8 mx-auto mb-2 text-purple-500" />
+                        <CalendarIcon className="h-8 w-8 mx-auto mb-2 text-amber-500" />
                         <p className="text-sm font-medium">ICS</p>
                         <p className="text-xs text-muted-foreground">Apple/Outlook</p>
                       </Card>
                       <Card className="p-4 text-center hover:border-primary/50 transition-all duration-300 cursor-pointer">
-                        <FileSpreadsheet className="h-8 w-8 mx-auto mb-2 text-green-500" />
+                        <FileSpreadsheet className="h-8 w-8 mx-auto mb-2 text-orange-600" />
                         <p className="text-sm font-medium">Excel</p>
                         <p className="text-xs text-muted-foreground">Planilha</p>
                       </Card>
                       <Card className="p-4 text-center hover:border-primary/50 transition-all duration-300 cursor-pointer">
-                        <Hash className="h-8 w-8 mx-auto mb-2 text-gray-500" />
+                        <Hash className="h-8 w-8 mx-auto mb-2 text-amber-600" />
                         <p className="text-sm font-medium">Markdown</p>
                         <p className="text-xs text-muted-foreground">Notion/Obsidian</p>
                       </Card>
                       <Card className="p-4 text-center hover:border-primary/50 transition-all duration-300 cursor-pointer">
-                        <Send className="h-8 w-8 mx-auto mb-2 text-green-600" />
+                        <Send className="h-8 w-8 mx-auto mb-2 text-red-600" />
                         <p className="text-sm font-medium">WhatsApp</p>
                         <p className="text-xs text-muted-foreground">Compartilhar</p>
                       </Card>
@@ -1813,7 +1813,7 @@ export function Dashboard() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5 }}
-                      className="overflow-hidden rounded-3xl bg-gradient-to-r from-rose-600 via-pink-600 to-purple-600 p-8 text-white"
+                      className="overflow-hidden rounded-3xl bg-gradient-to-r from-amber-600 via-orange-600 to-red-600 p-8 text-white"
                     >
                       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                         <div className="space-y-2">
@@ -1822,7 +1822,7 @@ export function Dashboard() {
                             Conecte-se com outros concurseiros, compartilhe dicas e tire dúvidas sobre seus estudos.
                           </p>
                         </div>
-                        <Button className="w-fit rounded-2xl bg-white text-pink-700 hover:bg-white/90">
+                        <Button className="w-fit rounded-2xl bg-white text-amber-700 hover:bg-white/90">
                           <Plus className="mr-2 h-4 w-4" />
                           Nova Discussão
                         </Button>
@@ -1897,8 +1897,8 @@ export function Dashboard() {
 
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2 mb-2">
-                                  {post.pinned && <Pin className="h-4 w-4 text-amber-500" />}
-                                  {post.solved && <CheckCircle className="h-4 w-4 text-green-500" />}
+                                                                  {post.pinned && <Pin className="h-4 w-4 text-orange-500" />}
+                                {post.solved && <CheckCircle className="h-4 w-4 text-red-500" />}
                                   <Badge variant="outline" className="rounded-xl">
                                     {post.category}
                                   </Badge>
@@ -1973,7 +1973,7 @@ export function Dashboard() {
                           </div>
                           <div className="flex items-center justify-between">
                             <span className="text-sm">Membros Online</span>
-                            <Badge className="rounded-xl bg-green-500">247</Badge>
+                            <Badge className="rounded-xl bg-orange-500">247</Badge>
                           </div>
                           <div className="flex items-center justify-between">
                             <span className="text-sm">Respostas Hoje</span>
@@ -2037,3 +2037,5 @@ export function Dashboard() {
     </div>
   )
 }
+
+export default Dashboard
