@@ -53,9 +53,8 @@ function SignInForm() {
         throw result.error
       }
       
-      // Redirecionar imediatamente após login bem-sucedido
-      const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
-      router.push(callbackUrl)
+      // O redirecionamento será feito pelo AuthContext no onAuthStateChange
+      // Não precisamos redirecionar aqui manualmente
     } catch (error: any) {
       console.error('Error signing in:', error)
       setError(error.message || 'Erro ao fazer login')

@@ -360,6 +360,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (event === 'SIGNED_IN' && session?.user) {
           setUser(session.user)
           await loadUserProfile(session.user.id)
+          // Redirecionar para dashboard após login bem-sucedido
+          router.push('/dashboard')
         } else if (event === 'SIGNED_OUT' || !session) {
           setUser(null)
           setProfile(null)
