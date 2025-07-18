@@ -338,32 +338,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // Escutar mudanças de autenticação
   useEffect(() => {
     // Verificar sessão inicial
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      
-      if (session?.user) {
-        setUser(session.user)
-        loadUserProfile(session.user.id)
+    const getInitialSession = async () => {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession()
+        
+        setSession(session)
+        
+        if (session?.user && !error) {
+          setUser(session.user)
+          await loadUserProfile(session.user.id)
+        }
+      } catch (error) {
+        console.error('Erro ao carregar sessão inicial:', error)
+      } finally {
+        setIsLoading(false)
       }
-      
-      setIsLoading(false)
-    })
+    }
+
+    getInitialSession()
 
     // Escutar mudanças
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
+        console.log('Auth state change:', event, session?.user?.email)
+        
         setSession(session)
         
-        if (session?.user) {
+        if (event === 'SIGNED_IN' && session?.user) {
           setUser(session.user)
           await loadUserProfile(session.user.id)
-        } else {
+          setIsLoading(false)
+        } else if (event === 'SIGNED_OUT') {
           setUser(null)
           setProfile(null)
           setSubscription(null)
+          setIsLoading(false)
         }
-        
-        setIsLoading(false)
       }
     )
 

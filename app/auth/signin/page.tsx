@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useState, useEffect } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuth } from '@/contexts/auth-context'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -18,18 +18,26 @@ export default function SignInPage() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const router = useRouter()
-  const { signIn, signInWithGoogle } = useAuth()
+  const searchParams = useSearchParams()
+  const { user, isLoading, signIn, signInWithGoogle } = useAuth()
+
+  // Redirecionar se já estiver logado
+  useEffect(() => {
+    if (!isLoading && user) {
+      const callbackUrl = searchParams.get('callbackUrl') || '/dashboard'
+      router.push(callbackUrl)
+    }
+  }, [user, isLoading, router, searchParams])
 
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true)
     setError('')
     try {
       await signInWithGoogle()
-      router.push('/dashboard')
+      // O Google OAuth redireciona automaticamente
     } catch (error) {
       console.error('Error signing in with Google:', error)
       setError('Erro ao fazer login com Google')
-    } finally {
       setGoogleLoading(false)
     }
   }
@@ -40,12 +48,14 @@ export default function SignInPage() {
     setError('')
     
     try {
-      await signIn(email, password)
-      router.push('/dashboard')
+      const result = await signIn(email, password)
+      if (result.error) {
+        throw result.error
+      }
+      // O redirecionamento será feito automaticamente pelo useEffect
     } catch (error: any) {
       console.error('Error signing in:', error)
       setError(error.message || 'Erro ao fazer login')
-    } finally {
       setLoading(false)
     }
   }
