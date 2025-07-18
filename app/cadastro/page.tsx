@@ -26,9 +26,13 @@ export default function SignUpPage() {
   const [googleLoading, setGoogleLoading] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
+    nome: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    telefone: '',
+    concursos_interesse: [] as string[],
+    nivel_estudos: 'iniciante' as 'iniciante' | 'intermediario' | 'avancado'
   })
   const [acceptTerms, setAcceptTerms] = useState(false)
   const router = useRouter()
@@ -87,33 +91,65 @@ export default function SignUpPage() {
     setLoading(true)
     
     try {
-      // Here you would typically call your signup API
-      // For now, we'll just redirect to sign in
-      console.log('Sign up data:', formData)
-      
-      // After successful signup, redirect to signin
-      router.push('/auth/signin?message=account-created')
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+          nome: formData.name,
+          telefone: formData.telefone,
+          concursos_interesse: formData.concursos_interesse,
+          nivel_estudos: formData.nivel_estudos
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Erro ao criar conta')
+      }
+
+      // Sucesso no cadastro
+      if (data.needsConfirmation) {
+        // Usuário precisa confirmar email
+        router.push('/auth/signin?message=confirm-email')
+      } else {
+        // Pode fazer login imediatamente
+        router.push('/auth/signin?message=account-created')
+      }
     } catch (error) {
       console.error('Error signing up:', error)
+      // Você pode adicionar um toast ou state para mostrar o erro
+      alert(error instanceof Error ? error.message : 'Erro ao criar conta')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 right-[10%] w-24 h-24 bg-orange-500 bg-opacity-20 rounded-full blur-xl"></div>
+        <div className="absolute bottom-1/4 left-[15%] w-32 h-32 bg-orange-300 bg-opacity-30 rounded-full blur-2xl"></div>
+        <div className="absolute top-1/3 left-[5%] w-16 h-16 bg-orange-400 bg-opacity-25 rounded-full blur-lg"></div>
+      </div>
+      
+      <Card className="w-full max-w-lg relative z-10 overflow-hidden">
+        <CardHeader className="text-center bg-gradient-to-br from-orange-500 to-orange-600 text-white">
           <div className="mx-auto mb-4">
-            <div className="w-12 h-12 bg-[#FF723A] rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-xl">C</span>
+            <div className="w-16 h-16 bg-white bg-opacity-20 border-2 border-white rounded-full flex items-center justify-center backdrop-blur-sm">
+              <span className="text-white font-bold text-2xl">C</span>
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold text-gray-900">
+          <CardTitle className="text-2xl font-bold text-white">
             Crie sua conta
           </CardTitle>
-          <p className="text-gray-600 mt-2">
-            Comece sua jornada rumo à aprovação no concurso dos seus sonhos
+          <p className="text-orange-100 mt-2">
+            Comece sua jornada rumo à aprovação com inteligência artificial
           </p>
         </CardHeader>
         
@@ -123,7 +159,7 @@ export default function SignUpPage() {
             <Button
               onClick={handleGoogleSignUp}
               disabled={googleLoading}
-              className="w-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+              className="w-full"
               variant="outline"
             >
               {googleLoading ? (
@@ -207,15 +243,15 @@ export default function SignUpPage() {
               <Checkbox
                 id="terms"
                 checked={acceptTerms}
-                onCheckedChange={setAcceptTerms}
+                onCheckedChange={(checked) => setAcceptTerms(checked === true)}
               />
               <Label htmlFor="terms" className="text-sm text-gray-600 leading-relaxed">
                 Eu aceito os{' '}
-                <Link href="/termos" className="text-[#FF723A] hover:underline">
+                <Link href="/termos" className="text-orange-500 hover:text-orange-600 hover:underline transition-colors">
                   Termos de Uso
                 </Link>
                 {' '}e{' '}
-                <Link href="/privacidade" className="text-[#FF723A] hover:underline">
+                <Link href="/privacidade" className="text-orange-500 hover:text-orange-600 hover:underline transition-colors">
                   Política de Privacidade
                 </Link>
               </Label>
@@ -224,7 +260,7 @@ export default function SignUpPage() {
             <Button
               type="submit"
               disabled={loading || !acceptTerms}
-              className="w-full bg-[#FF723A] hover:bg-[#E55A2B]"
+              className="w-full"
             >
               {loading ? (
                 <>
@@ -245,7 +281,7 @@ export default function SignUpPage() {
               Já tem uma conta?{' '}
               <Link 
                 href="/auth/signin" 
-                className="text-[#FF723A] hover:underline font-medium"
+                className="text-orange-500 hover:text-orange-600 hover:underline font-semibold transition-colors"
               >
                 Fazer login
               </Link>
@@ -253,13 +289,13 @@ export default function SignUpPage() {
           </div>
 
           {/* Free Plan Benefits */}
-          <div className="bg-gray-50 rounded-lg p-4 mt-6">
-            <h4 className="font-medium text-gray-900 mb-2">Plano Gratuito inclui:</h4>
-            <ul className="text-sm text-gray-600 space-y-1">
-              <li>✓ 3 cronogramas personalizados</li>
-              <li>✓ 5 simulados por mês</li>
-              <li>✓ Acesso ao fórum da comunidade</li>
-              <li>✓ 10 sessões Pomodoro por dia</li>
+          <div className="bg-gradient-to-br from-orange-100 to-orange-200 rounded-xl border-2 border-orange-300 p-6 mt-6">
+            <h4 className="font-bold text-gray-900 mb-3 text-center">🎯 Plano Gratuito inclui:</h4>
+            <ul className="text-sm text-gray-700 space-y-2">
+              <li className="flex items-center gap-2"><span className="w-5 h-5 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold">✓</span> 3 cronogramas personalizados com IA</li>
+              <li className="flex items-center gap-2"><span className="w-5 h-5 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold">✓</span> 5 simulados adaptativos por mês</li>
+              <li className="flex items-center gap-2"><span className="w-5 h-5 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold">✓</span> Acesso ao fórum da comunidade</li>
+              <li className="flex items-center gap-2"><span className="w-5 h-5 bg-orange-500 text-white rounded-full flex items-center justify-center text-xs font-bold">✓</span> 10 sessões Pomodoro por dia</li>
             </ul>
           </div>
         </CardContent>

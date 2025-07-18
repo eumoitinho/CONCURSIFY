@@ -2,6 +2,64 @@
 
 Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 
+## [0.3.0] - 2025-01-15
+
+### ✨ Novas Funcionalidades
+
+#### 🔐 Sistema de Autenticação Completo
+- **Contexto de autenticação** React com gerenciamento de estado global
+- **APIs de autenticação** integradas com Supabase:
+  - 📝 Cadastro (`/api/auth/signup`)
+  - 🔑 Login (`/api/auth/signin`)
+  - 🚪 Logout (`/api/auth/signout`)
+- **Criação automática de perfil** com dados iniciais
+- **Configurações padrão** para novos usuários
+- **Tracking de eventos** de cadastro e login
+
+#### 👤 Sistema de Perfil de Usuário
+- **Perfil automático** criado no cadastro
+- **Configurações personalizáveis**:
+  - 🎨 Tema (claro/escuro)
+  - 🔔 Notificações (email/push)
+  - ⏰ Preferências Pomodoro
+  - 🌍 Localização e idioma
+- **Preferências musicais** para integração Spotify
+- **Estatísticas do fórum** inicializadas
+
+#### 💎 Sistema de Monetização Inteligente
+- **Verificação de plano** em tempo real
+- **Limitações por funcionalidade**:
+  - 🆓 Plano Gratuito: 1 cronograma/mês, 3 simulados/mês, 10 notas
+  - 💰 Plano Premium: Recursos ilimitados
+- **Controle de acesso** baseado em features
+- **Tracking de uso** mensal para aplicar limitações
+
+#### 🏗️ Infraestrutura Aprimorada
+- **AuthProvider** global para gerenciar estado de autenticação
+- **Migração de banco** robusta com verificações condicionais
+- **Índices otimizados** para melhor performance
+- **Triggers automáticos** para contadores e estatísticas
+
+### 🔧 Melhorias Técnicas
+
+#### 🗃️ Banco de Dados
+- **Migrations corrigidas** com verificações de existência
+- **Índices condicionais** para evitar erros de ordem
+- **Triggers protegidos** contra tabelas inexistentes
+- **Extensões opcionais** (vector) com fallback
+
+#### 🎨 Interface
+- **Página de cadastro** integrada com API real
+- **Tratamento de erros** amigável ao usuário
+- **Validação de formulários** no frontend e backend
+- **Feedback visual** durante operações
+
+### 🐛 Correções
+- **Erros de TypeScript** em rotas de API resolvidos
+- **Problema do header azul** em modo escuro corrigido
+- **Migrations falhando** por dependências de ordem
+- **Tipos de autenticação** do NextAuth corrigidos
+
 ## [0.2.0] - 2025-07-18
 
 ### ✨ Novas Funcionalidades

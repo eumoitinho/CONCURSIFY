@@ -1,6 +1,6 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
+import { useAuth } from '@/contexts/auth-context'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -19,18 +19,18 @@ import {
 import Link from 'next/link'
 
 export default function DashboardPage() {
-  const { data: session, status } = useSession()
+  const { user, isLoading } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
-    if (status === 'loading') return // Still loading
+    if (isLoading) return // Still loading
     
-    if (!session) {
+    if (!user) {
       router.push('/auth/signin')
     }
-  }, [session, status, router])
+  }, [user, isLoading, router])
 
-  if (status === 'loading') {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF723A]"></div>
@@ -38,7 +38,7 @@ export default function DashboardPage() {
     )
   }
 
-  if (!session) {
+  if (!user) {
     return null
   }
 
@@ -81,25 +81,32 @@ export default function DashboardPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/4 right-[20%] w-32 h-32 bg-orange-500 bg-opacity-10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/3 left-[15%] w-40 h-40 bg-orange-300 bg-opacity-20 rounded-full blur-2xl"></div>
+        <div className="absolute top-1/2 left-[5%] w-24 h-24 bg-orange-400 bg-opacity-15 rounded-full blur-xl"></div>
+      </div>
+      
       {/* Header */}
-      <div className="bg-white border-b">
+      <div className="bg-gradient-to-r from-orange-500 to-orange-600 border-b-4 border-gray-800 shadow-[0_4px_0px_0px_#2d2d2d] relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-6">
+          <div className="flex justify-between items-center py-8">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-3xl font-bold text-white">
                 Olá, {session.user?.name || 'Estudante'}! 👋
               </h1>
-              <p className="text-gray-600">
-                Bem-vindo ao seu painel de estudos
+              <p className="text-orange-100 text-lg">
+                Bem-vindo ao seu painel de estudos com IA
               </p>
             </div>
             <div className="flex items-center space-x-4">
-              <Badge className="bg-[#FF723A]">
+              <Badge className="bg-white bg-opacity-20 text-white border-2 border-white backdrop-blur-sm">
                 Plano Gratuito
               </Badge>
               <Link href="/planos">
-                <Button size="sm" className="bg-[#FF723A] hover:bg-[#E55A2B]">
+                <Button size="sm" className="bg-white text-orange-500 hover:bg-orange-50">
                   Fazer Upgrade
                 </Button>
               </Link>
@@ -108,7 +115,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {/* Quick Stats */}
           <Card>
@@ -118,7 +125,7 @@ export default function DashboardPage() {
                   <p className="text-sm font-medium text-gray-600">Cronogramas</p>
                   <p className="text-2xl font-bold text-gray-900">3</p>
                 </div>
-                <Calendar className="h-8 w-8 text-[#FF723A]" />
+                <Calendar className="h-8 w-8 text-orange-500" />
               </div>
               <p className="text-xs text-gray-500 mt-2">+1 esta semana</p>
             </CardContent>
@@ -131,7 +138,7 @@ export default function DashboardPage() {
                   <p className="text-sm font-medium text-gray-600">Simulados</p>
                   <p className="text-2xl font-bold text-gray-900">12</p>
                 </div>
-                <BookOpen className="h-8 w-8 text-[#FF723A]" />
+                <BookOpen className="h-8 w-8 text-orange-500" />
               </div>
               <p className="text-xs text-gray-500 mt-2">5 restantes este mês</p>
             </CardContent>
@@ -144,7 +151,7 @@ export default function DashboardPage() {
                   <p className="text-sm font-medium text-gray-600">Horas de Estudo</p>
                   <p className="text-2xl font-bold text-gray-900">24h</p>
                 </div>
-                <Clock className="h-8 w-8 text-[#FF723A]" />
+                <Clock className="h-8 w-8 text-orange-500" />
               </div>
               <p className="text-xs text-gray-500 mt-2">+3h esta semana</p>
             </CardContent>
@@ -157,7 +164,7 @@ export default function DashboardPage() {
                   <p className="text-sm font-medium text-gray-600">Desempenho</p>
                   <p className="text-2xl font-bold text-gray-900">85%</p>
                 </div>
-                <TrendingUp className="h-8 w-8 text-[#FF723A]" />
+                <TrendingUp className="h-8 w-8 text-orange-500" />
               </div>
               <p className="text-xs text-gray-500 mt-2">+5% no último mês</p>
             </CardContent>
@@ -177,13 +184,13 @@ export default function DashboardPage() {
                     const Icon = action.icon
                     return (
                       <Link key={index} href={action.href}>
-                        <div className="p-4 border rounded-lg hover:bg-gray-50 transition-colors cursor-pointer">
-                          <div className="flex items-start space-x-3">
-                            <div className={`p-2 rounded-lg ${action.color}`}>
-                              <Icon className="h-5 w-5 text-white" />
+                        <div className="p-6 border-2 border-gray-800 rounded-xl hover:bg-orange-100 transition-all duration-300 cursor-pointer shadow-[3px_3px_0px_0px_#2d2d2d] hover:shadow-[5px_5px_0px_0px_#2d2d2d] hover:-translate-y-1">
+                          <div className="flex items-start space-x-4">
+                            <div className="p-3 rounded-full bg-orange-500 border-2 border-gray-800">
+                              <Icon className="h-6 w-6 text-white" />
                             </div>
                             <div>
-                              <h3 className="font-medium text-gray-900">{action.title}</h3>
+                              <h3 className="font-bold text-gray-900 mb-1">{action.title}</h3>
                               <p className="text-sm text-gray-600">{action.description}</p>
                             </div>
                           </div>
@@ -206,7 +213,7 @@ export default function DashboardPage() {
                 <div className="space-y-4">
                   {recentActivity.map((activity, index) => (
                     <div key={index} className="flex items-start space-x-2">
-                      <div className="w-2 h-2 bg-[#FF723A] rounded-full mt-2"></div>
+                      <div className="w-2 h-2 bg-orange-500 rounded-full mt-2"></div>
                       <div>
                         <p className="text-sm text-gray-900">{activity.action}</p>
                         <p className="text-xs text-gray-500">{activity.time}</p>
@@ -222,31 +229,31 @@ export default function DashboardPage() {
         {/* Navigation Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
           <Link href="/forum">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardContent className="p-6 text-center">
-                <MessageSquare className="h-12 w-12 text-[#FF723A] mx-auto mb-4" />
-                <h3 className="font-semibold text-gray-900 mb-2">Fórum</h3>
+            <Card className="cursor-pointer group">
+              <CardContent className="p-8 text-center">
+                <MessageSquare className="h-16 w-16 text-orange-500 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="font-bold text-gray-900 mb-3 text-lg">Fórum</h3>
                 <p className="text-sm text-gray-600">Participe da comunidade de concurseiros</p>
               </CardContent>
             </Card>
           </Link>
 
           <Link href="/caderno">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardContent className="p-6 text-center">
-                <BookOpen className="h-12 w-12 text-[#FF723A] mx-auto mb-4" />
-                <h3 className="font-semibold text-gray-900 mb-2">Caderno</h3>
+            <Card className="cursor-pointer group">
+              <CardContent className="p-8 text-center">
+                <BookOpen className="h-16 w-16 text-orange-500 mx-auto mb-6 group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="font-bold text-gray-900 mb-3 text-lg">Caderno</h3>
                 <p className="text-sm text-gray-600">Organize suas anotações e materiais</p>
               </CardContent>
             </Card>
           </Link>
 
           <Link href="/planos">
-            <Card className="hover:shadow-lg transition-shadow cursor-pointer border-[#FF723A] border-2">
-              <CardContent className="p-6 text-center">
-                <Star className="h-12 w-12 text-[#FF723A] mx-auto mb-4" />
-                <h3 className="font-semibold text-gray-900 mb-2">Upgrade</h3>
-                <p className="text-sm text-gray-600">Desbloqueie todos os recursos</p>
+            <Card className="cursor-pointer group bg-gradient-to-br from-orange-500 to-orange-600 text-white border-orange-600">
+              <CardContent className="p-8 text-center">
+                <Star className="h-16 w-16 text-white mx-auto mb-6 group-hover:scale-110 transition-transform duration-300" />
+                <h3 className="font-bold text-white mb-3 text-lg">Upgrade</h3>
+                <p className="text-sm text-orange-100">Desbloqueie todos os recursos</p>
               </CardContent>
             </Card>
           </Link>

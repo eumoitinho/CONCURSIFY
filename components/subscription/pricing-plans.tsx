@@ -195,13 +195,13 @@ export function PricingPlans({ plans }: PricingPlansProps) {
         <Switch
           checked={isYearly}
           onCheckedChange={setIsYearly}
-          className="data-[state=checked]:bg-[#FF723A]"
+          className="data-[state=checked]:bg-orange-500"
         />
         <span className={`text-sm font-medium ${isYearly ? 'text-gray-900' : 'text-gray-500'}`}>
           Anual
         </span>
         {isYearly && (
-          <Badge className="bg-[#FF723A] text-white">
+          <Badge className="bg-orange-500 text-white border-2 border-gray-800 shadow-[2px_2px_0px_0px_#2d2d2d]">
             <Gift className="h-3 w-3 mr-1" />
             2 meses grátis
           </Badge>
@@ -218,24 +218,24 @@ export function PricingPlans({ plans }: PricingPlansProps) {
           return (
             <Card 
               key={plan.id} 
-              className={`relative transition-all duration-300 hover:shadow-xl ${
+              className={`relative transition-all duration-300 ${
                 plan.is_popular 
-                  ? 'border-[#FF723A] border-2 shadow-lg scale-105' 
-                  : 'border-gray-200 hover:border-[#FF723A]/50'
+                  ? 'border-orange-500 border-4 scale-105 bg-gradient-to-br from-orange-50 to-orange-100' 
+                  : 'hover:bg-orange-50'
               }`}
             >
               {plan.is_popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <Badge className="bg-[#FF723A] text-white px-4 py-1">
-                    <Star className="h-3 w-3 mr-1" />
+                  <Badge className="bg-orange-500 text-white px-4 py-2 border-2 border-gray-800 shadow-[3px_3px_0px_0px_#2d2d2d] font-bold">
+                    <Star className="h-4 w-4 mr-1" />
                     Mais popular
                   </Badge>
                 </div>
               )}
 
               <CardHeader className="text-center pb-4">
-                <div className={`mx-auto p-3 rounded-full w-fit ${
-                  plan.is_popular ? 'bg-[#FF723A] text-white' : 'bg-gray-100 text-gray-600'
+                <div className={`mx-auto p-4 rounded-full w-fit border-2 border-gray-800 ${
+                  plan.is_popular ? 'bg-orange-500 text-white shadow-[3px_3px_0px_0px_#2d2d2d]' : 'bg-white text-gray-600 shadow-[3px_3px_0px_0px_#2d2d2d]'
                 }`}>
                   {getPlanIcon(plan.name)}
                 </div>
@@ -262,7 +262,7 @@ export function PricingPlans({ plans }: PricingPlansProps) {
                           currency: 'BRL'
                         }).format(plan.price_yearly)} cobrado anualmente
                       </p>
-                      <Badge variant="outline" className="mt-1 text-[#FF723A] border-[#FF723A]">
+                      <Badge variant="outline" className="mt-1 text-orange-500 border-orange-500 border-2 shadow-[2px_2px_0px_0px_#2d2d2d] font-semibold">
                         Economize {savings.percentage}%
                       </Badge>
                     </div>
@@ -280,11 +280,7 @@ export function PricingPlans({ plans }: PricingPlansProps) {
                 <Button
                   onClick={() => handleSubscribe(plan)}
                   disabled={isLoading}
-                  className={`w-full mb-6 ${
-                    plan.is_popular
-                      ? 'bg-[#FF723A] hover:bg-[#E55A2B] text-white'
-                      : 'border-2 border-[#FF723A] text-[#FF723A] hover:bg-[#FF723A] hover:text-white'
-                  }`}
+                  className="w-full mb-6"
                   variant={plan.is_popular ? 'default' : 'outline'}
                 >
                   {isLoading ? (
@@ -302,7 +298,9 @@ export function PricingPlans({ plans }: PricingPlansProps) {
                 <ul className="space-y-3">
                   {features.map((feature, index) => (
                     <li key={index} className="flex items-start space-x-3">
-                      <Check className="h-4 w-4 text-[#FF723A] mt-0.5 flex-shrink-0" />
+                      <div className="w-5 h-5 bg-orange-500 rounded-full flex items-center justify-center mt-0.5 flex-shrink-0">
+                        <Check className="h-3 w-3 text-white font-bold" />
+                      </div>
                       <span className="text-sm text-gray-600">{feature}</span>
                     </li>
                   ))}
@@ -311,7 +309,7 @@ export function PricingPlans({ plans }: PricingPlansProps) {
                 {plan.name.toLowerCase() === 'profissional' && (
                   <div className="mt-6 pt-6 border-t border-gray-200">
                     <div className="flex items-center space-x-2 text-sm text-gray-600">
-                      <Crown className="h-4 w-4 text-[#FF723A]" />
+                      <Crown className="h-4 w-4 text-orange-500" />
                       <span>Acesso antecipado a novos recursos</span>
                     </div>
                   </div>

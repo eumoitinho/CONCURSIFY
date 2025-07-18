@@ -1,0 +1,233 @@
+===============================================================================
+                    🚀 CONFIGURAÇÃO STRIPE - CONCURSIFY PRO
+===============================================================================
+
+📋 PASSO A PASSO PARA CRIAR O PRODUTO NA STRIPE
+
+===============================================================================
+                            1️⃣ ACESSO AO STRIPE
+===============================================================================
+
+1. Acesse: https://dashboard.stripe.com
+2. Faça login na sua conta Stripe
+3. Certifique-se que está no modo correto:
+   - 🧪 TESTE (para desenvolvimento)
+   - 🚀 PRODUÇÃO (para lançamento)
+
+===============================================================================
+                            2️⃣ CRIAR O PRODUTO
+===============================================================================
+
+1. No painel esquerdo, clique em "Products"
+2. Clique no botão "Add product"
+3. Preencha as informações:
+
+📝 INFORMAÇÕES DO PRODUTO:
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Name: Concursify Pro                                                    │
+│ Description: Plataforma completa para preparação de concursos com IA   │
+│ Statement descriptor: CONCURSIFY PRO                                   │
+│ Unit label: (deixe vazio)                                              │
+│ Product image: (faça upload do logo do Concursify)                     │
+│ Metadata: (opcional)                                                   │
+└─────────────────────────────────────────────────────────────────────────┘
+
+🏷️ CONFIGURAÇÕES ADICIONAIS:
+- Tax code: SaaS (Software as a Service)
+- Shippable: NÃO
+- URL: https://concursify.com/pro
+
+===============================================================================
+                            3️⃣ CRIAR OS PREÇOS
+===============================================================================
+
+Você precisa criar 2 preços para o mesmo produto:
+
+🔹 PREÇO MENSAL
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Pricing model: Standard pricing                                        │
+│ Price: R$ 39,90                                                        │
+│ Billing period: Monthly                                                 │
+│ Currency: BRL (Real brasileiro)                                        │
+│ Price description: Plano Mensal                                        │
+│ Trial period: 7 days                                                   │
+│ Usage is metered: NÃO                                                  │
+└─────────────────────────────────────────────────────────────────────────┘
+
+🔹 PREÇO ANUAL
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Pricing model: Standard pricing                                        │
+│ Price: R$ 399,00                                                       │
+│ Billing period: Yearly                                                 │
+│ Currency: BRL (Real brasileiro)                                        │
+│ Price description: Plano Anual (2 meses grátis)                       │
+│ Trial period: 7 days                                                   │
+│ Usage is metered: NÃO                                                  │
+└─────────────────────────────────────────────────────────────────────────┘
+
+===============================================================================
+                        4️⃣ CONFIGURAR WEBHOOK
+===============================================================================
+
+1. Vá em "Developers" > "Webhooks"
+2. Clique em "Add endpoint"
+3. Configure:
+
+📡 WEBHOOK ENDPOINT:
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Endpoint URL: https://seudominio.com/api/payments/webhooks             │
+│ Description: Concursify Payments Webhook                               │
+│ Version: Latest API version                                            │
+│ Select events:                                                         │
+│   ✅ invoice.payment_succeeded                                         │
+│   ✅ invoice.payment_failed                                            │
+│   ✅ customer.subscription.created                                     │
+│   ✅ customer.subscription.updated                                     │
+│   ✅ customer.subscription.deleted                                     │
+│   ✅ customer.subscription.trial_will_end                             │
+│   ✅ payment_intent.succeeded                                          │
+│   ✅ payment_intent.payment_failed                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+
+4. Salve o webhook
+5. Copie o "Signing secret" (whsec_...)
+
+===============================================================================
+                    5️⃣ CONFIGURAR VARIÁVEIS DE AMBIENTE
+===============================================================================
+
+No seu arquivo .env.local:
+
+# Stripe Keys
+STRIPE_PUBLIC_KEY=pk_test_... (ou pk_live_...)
+STRIPE_SECRET_KEY=sk_test_... (ou sk_live_...)
+STRIPE_WEBHOOK_SECRET=whsec_...
+
+# Product IDs (você vai pegar depois de criar)
+STRIPE_PRICE_ID_MONTHLY=price_...
+STRIPE_PRICE_ID_YEARLY=price_...
+
+===============================================================================
+                        6️⃣ COPIAR IDs DOS PREÇOS
+===============================================================================
+
+Depois de criar os preços:
+
+1. Vá em "Products" > "Concursify Pro"
+2. Na seção "Pricing", você verá os dois preços
+3. Clique em cada preço para ver os detalhes
+4. Copie o "Price ID" (price_1234567890...)
+
+🏷️ EXEMPLO DE IDs:
+- Monthly: price_1OVKjJLkdIwHu7ixZhnattbh
+- Yearly: price_1OVKjJLkdIwHu7ixZhnattbi
+
+===============================================================================
+                        7️⃣ CONFIGURAR NO CÓDIGO
+===============================================================================
+
+Adicione no seu arquivo de migração dos planos:
+
+supabase/migrations/004_seed_data.sql:
+
+-- Atualizar planos com IDs do Stripe
+UPDATE subscription_plans 
+SET stripe_price_id_monthly = 'price_1OVKjJLkdIwHu7ixZhnattbh',
+    stripe_price_id_yearly = 'price_1OVKjJLkdIwHu7ixZhnattbi'
+WHERE name = 'Premium';
+
+===============================================================================
+                        8️⃣ TESTAR O FLUXO
+===============================================================================
+
+🧪 MODO TESTE:
+1. Use os cartões de teste da Stripe:
+   - 4242 4242 4242 4242 (Visa)
+   - Qualquer data futura
+   - Qualquer CVC
+
+2. Teste os cenários:
+   ✅ Assinatura mensal
+   ✅ Assinatura anual
+   ✅ Período de teste
+   ✅ Cancelamento
+   ✅ Falha de pagamento
+
+🚀 MODO PRODUÇÃO:
+1. Ative sua conta Stripe
+2. Mude para modo Live
+3. Atualize as chaves no .env.local
+4. Refaça os testes com cartão real
+
+===============================================================================
+                        9️⃣ CONFIGURAÇÕES EXTRAS
+===============================================================================
+
+📧 EMAILS AUTOMÁTICOS:
+1. Vá em "Settings" > "Emails"
+2. Ative os emails que você quer enviar:
+   ✅ Receipt emails
+   ✅ Failed payment emails
+   ✅ Trial ending emails
+
+🏦 CONTA BANCÁRIA:
+1. Vá em "Settings" > "Payouts"
+2. Adicione sua conta bancária brasileira
+3. Configure o cronograma de transferências
+
+🧾 IMPOSTOS:
+1. Vá em "Settings" > "Tax settings"
+2. Configure para Brasil
+3. Adicione suas informações fiscais
+
+===============================================================================
+                        🔟 CHECKLIST FINAL
+===============================================================================
+
+✅ Produto "Concursify Pro" criado
+✅ Preço mensal R$ 39,90 configurado
+✅ Preço anual R$ 399,00 configurado
+✅ Período de teste 7 dias configurado
+✅ Webhook configurado e testado
+✅ Variáveis de ambiente definidas
+✅ IDs dos preços copiados
+✅ Banco de dados atualizado
+✅ Fluxo testado em modo teste
+✅ Emails automáticos configurados
+✅ Conta bancária configurada
+✅ Impostos configurados
+
+===============================================================================
+                        🚨 IMPORTANTE - SEGURANÇA
+===============================================================================
+
+🔐 NUNCA EXPONHA suas chaves secretas:
+- sk_test_... e sk_live_... devem estar apenas no servidor
+- Apenas pk_test_... e pk_live_... podem ir para o frontend
+
+🛡️ VALIDAÇÕES:
+- Sempre valide webhooks com o signing secret
+- Verifique se o customer_id pertence ao usuário
+- Nunca confie apenas no frontend
+
+===============================================================================
+                        📞 SUPORTE STRIPE
+===============================================================================
+
+📚 Documentação: https://stripe.com/docs
+💬 Suporte: https://support.stripe.com
+📧 Email: support@stripe.com
+🇧🇷 Suporte Brasil: Segunda a sexta, 8h às 18h
+
+===============================================================================
+                        🎯 PRÓXIMOS PASSOS
+===============================================================================
+
+1. Criar o produto seguindo este guia
+2. Testar todo o fluxo de pagamento
+3. Implementar a página de checkout
+4. Configurar os emails de cobrança
+5. Fazer testes com usuários reais
+6. Lançar para produção
+
+=============================================================================== 

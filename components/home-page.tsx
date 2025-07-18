@@ -1,31 +1,24 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
-import { 
-  Search, 
+import {
+  Search,
   Menu,
   X,
-  Star,
   Heart,
   Play,
   Check,
   Clock,
   User,
   BarChart,
-  Users,
   Facebook,
   Twitter,
   Instagram,
   Linkedin,
-  Youtube,
   Mail,
   Phone,
-  MapPin
+  MapPin,
 } from "lucide-react"
 
 export function HomePage() {
@@ -36,9 +29,9 @@ export function HomePage() {
   // Preloader effect
   useEffect(() => {
     const timer = setTimeout(() => {
-      const preloader = document.getElementById('preloader')
+      const preloader = document.getElementById("preloader")
       if (preloader) {
-        preloader.style.display = 'none'
+        preloader.style.display = "none"
       }
     }, 1000)
     return () => clearTimeout(timer)
@@ -55,9 +48,9 @@ export function HomePage() {
       estudantes: "6395+",
       preco: "R$ 450",
       rating: "4.8(256)",
-      image: "/img/course/01.png",
-      instructor: "/img/course/in1.png",
-      category: "cat1"
+      image: "/placeholder.svg?height=200&width=300&text=TCU",
+      instructor: "/placeholder.svg?height=40&width=40&text=Prof",
+      category: "cat1",
     },
     {
       id: 2,
@@ -69,9 +62,9 @@ export function HomePage() {
       estudantes: "8234+",
       preco: "R$ 520",
       rating: "4.9(312)",
-      image: "/img/course/02.png",
-      instructor: "/img/course/in2.png",
-      category: "cat2"
+      image: "/placeholder.svg?height=200&width=300&text=PF",
+      instructor: "/placeholder.svg?height=40&width=40&text=Prof",
+      category: "cat2",
     },
     {
       id: 3,
@@ -83,9 +76,9 @@ export function HomePage() {
       estudantes: "5678+",
       preco: "R$ 680",
       rating: "4.9(189)",
-      image: "/img/course/03.png",
-      instructor: "/img/course/in3.png",
-      category: "cat3"
+      image: "/placeholder.svg?height=200&width=300&text=RF",
+      instructor: "/placeholder.svg?height=40&width=40&text=Prof",
+      category: "cat3",
     },
     {
       id: 4,
@@ -97,9 +90,9 @@ export function HomePage() {
       estudantes: "4521+",
       preco: "R$ 750",
       rating: "4.8(156)",
-      image: "/img/course/04.png",
-      instructor: "/img/course/in4.png",
-      category: "cat1"
+      image: "/placeholder.svg?height=200&width=300&text=MP",
+      instructor: "/placeholder.svg?height=40&width=40&text=Prof",
+      category: "cat1",
     },
     {
       id: 5,
@@ -111,9 +104,9 @@ export function HomePage() {
       estudantes: "3892+",
       preco: "R$ 580",
       rating: "4.7(201)",
-      image: "/img/course/05.png",
-      instructor: "/img/course/in5.png",
-      category: "cat2"
+      image: "/placeholder.svg?height=200&width=300&text=TRF",
+      instructor: "/placeholder.svg?height=40&width=40&text=Prof",
+      category: "cat2",
     },
     {
       id: 6,
@@ -125,54 +118,54 @@ export function HomePage() {
       estudantes: "2945+",
       preco: "R$ 640",
       rating: "4.8(134)",
-      image: "/img/course/06.png",
-      instructor: "/img/course/in6.png",
-      category: "cat3"
-    }
+      image: "/placeholder.svg?height=200&width=300&text=DP",
+      instructor: "/placeholder.svg?height=40&width=40&text=Prof",
+      category: "cat3",
+    },
   ]
 
   const instrutores = [
     {
       name: "Dr. João Silva",
       specialty: "Direito Constitucional",
-      image: "/img/instructor/01.jpg"
+      image: "/placeholder.svg?height=250&width=200&text=João",
     },
     {
       name: "Prof. Maria Santos",
       specialty: "Matemática Financeira",
-      image: "/img/instructor/02.jpg"
+      image: "/placeholder.svg?height=250&width=200&text=Maria",
     },
     {
       name: "Dr. Carlos Oliveira",
       specialty: "Direito Administrativo",
-      image: "/img/instructor/03.jpg"
+      image: "/placeholder.svg?height=250&width=200&text=Carlos",
     },
     {
       name: "Prof. Ana Costa",
       specialty: "Português",
-      image: "/img/instructor/04.jpg"
-    }
+      image: "/placeholder.svg?height=250&width=200&text=Ana",
+    },
   ]
 
   const testimonials = [
     {
       name: "Rafael Mendes",
       role: "Aprovado TCU 2024",
-      image: "/img/testimonial/01.png",
-      text: "Com o Concursify consegui organizar meus estudos de forma eficiente. A IA realmente entende o que preciso estudar!"
+      image: "/placeholder.svg?height=60&width=60&text=RM",
+      text: "Com o Concursify consegui organizar meus estudos de forma eficiente. A IA realmente entende o que preciso estudar!",
     },
     {
       name: "Marina Silva",
       role: "Aprovada PF 2024",
-      image: "/img/testimonial/02.png",
-      text: "Os simulados adaptativos foram fundamentais para minha aprovação. Sistema incrível!"
+      image: "/placeholder.svg?height=60&width=60&text=MS",
+      text: "Os simulados adaptativos foram fundamentais para minha aprovação. Sistema incrível!",
     },
     {
       name: "Lucas Ferreira",
       role: "Aprovado TRF 2024",
-      image: "/img/testimonial/03.png",
-      text: "A comunidade do fórum me ajudou muito. Compartilhar dúvidas e experiências fez toda diferença."
-    }
+      image: "/placeholder.svg?height=60&width=60&text=LF",
+      text: "A comunidade do fórum me ajudou muito. Compartilhar dúvidas e experiências fez toda diferença.",
+    },
   ]
 
   const blogs = [
@@ -181,25 +174,25 @@ export function HomePage() {
       excerpt: "Descubra técnicas comprovadas para maximizar seu tempo de estudo",
       date: "15 de Janeiro, 2024",
       author: "Equipe Concursify",
-      image: "/img/blog/01.jpg",
-      tags: ["Estratégia", "Produtividade"]
+      image: "/placeholder.svg?height=200&width=300&text=Blog1",
+      tags: ["Estratégia", "Produtividade"],
     },
     {
       title: "Como a IA está Revolucionando os Concursos",
       excerpt: "Entenda como usar inteligência artificial a seu favor",
       date: "12 de Janeiro, 2024",
       author: "Dr. João Silva",
-      image: "/img/blog/02.jpg",
-      tags: ["Tecnologia", "IA"]
+      image: "/placeholder.svg?height=200&width=300&text=Blog2",
+      tags: ["Tecnologia", "IA"],
     },
     {
       title: "Técnicas de Memorização para Concursos",
       excerpt: "Métodos científicos para melhorar sua retenção",
       date: "10 de Janeiro, 2024",
       author: "Prof. Maria Santos",
-      image: "/img/blog/03.jpg",
-      tags: ["Memorização", "Técnicas"]
-    }
+      image: "/placeholder.svg?height=200&width=300&text=Blog3",
+      tags: ["Memorização", "Técnicas"],
+    },
   ]
 
   return (
@@ -214,212 +207,341 @@ export function HomePage() {
 
       {/* Header */}
       <header className="header-fixed">
-        <div id="theme-menu-one" className="main-header-area px-4 py-3 lg:px-24 lg:py-5">
-          <div className="container-fluid">
-            <div className="row align-items-center">
-              <div className="col-xl-2 col-lg-2 col-5">
-                <div className="logo">
-                  <Link href="/">
-                    <img src="/img/logo/header_logo_one.svg" alt="Concursify" />
-                  </Link>
-                </div>
+        <div className="container mx-auto">
+          <div className="flex items-center justify-between py-3 px-4 lg:px-6">
+            {/* Logo */}
+            <div className="flex-shrink-0">
+              <Link href="/" className="block">
+                <img
+                  src="/placeholder.svg?height=32&width=120&text=Concursify"
+                  alt="Concursify"
+                  className="h-8 w-auto"
+                />
+              </Link>
+            </div>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center space-x-8">
+              <div className="flex items-center space-x-6">
+                <a
+                  href="#"
+                  className="nav-link text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors"
+                >
+                  Todas as Áreas
+                </a>
+                <a href="#" className="nav-link text-sm font-medium text-orange-500 transition-colors">
+                  Início
+                </a>
+                <a
+                  href="#"
+                  className="nav-link text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors"
+                >
+                  Páginas
+                </a>
+                <a
+                  href="#"
+                  className="nav-link text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors"
+                >
+                  Blog
+                </a>
+                <a
+                  href="/contato"
+                  className="nav-link text-sm font-medium text-gray-700 hover:text-orange-500 transition-colors"
+                >
+                  Contato
+                </a>
               </div>
-              <div className="col-xl-7 col-lg-8 hidden lg:block">
-                <nav className="main-menu navbar navbar-expand-lg justify-content-center">
-                  <div className="nav-container">
-                    <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                      <ul className="navbar-nav space-x-4">
-                        <li className="nav-item dropdown mega-menu">
-                          <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Todas as Áreas
-                          </a>
-                          <ul className="dropdown-menu submenu mega-menu__sub-menu-box" aria-labelledby="navbarDropdown">
-                            <li><a href="/concursos"><span><img src="/img/icon/icon7.svg" alt="" /></span> Jurídico</a></li>
-                            <li><a href="/concursos"><span><img src="/img/icon/icon8.svg" alt="" /></span> Tecnologia</a></li>
-                            <li><a href="/concursos"><span><img src="/img/icon/icon9.svg" alt="" /></span> Saúde</a></li>
-                            <li><a href="/concursos"><span><img src="/img/icon/icon10.svg" alt="" /></span> Educação</a></li>
-                            <li><a href="/concursos"><span><img src="/img/icon/icon11.svg" alt="" /></span> Segurança</a></li>
-                            <li><a href="/concursos"><span><img src="/img/icon/icon12.svg" alt="" /></span> Administração</a></li>
-                            <li><a href="/concursos"><span><img src="/img/icon/icon14.svg" alt="" /></span> Tributário</a></li>
-                            <li><a href="/concursos"><span><img src="/img/icon/icon13.svg" alt="" /></span> Auditoria</a></li>
-                          </ul>
-                        </li>
-                        <li className="nav-item dropdown active">
-                          <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown2" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Início
-                          </a>
-                          <ul className="dropdown-menu" aria-labelledby="navbarDropdown2">
-                            <li><a className="dropdown-item" href="/">Página Inicial</a></li>
-                            <li><a className="dropdown-item" href="/cronogramas">Cronogramas IA</a></li>
-                            <li><a className="dropdown-item" href="/simulados">Simulados</a></li>
-                          </ul>
-                        </li>
-                        <li className="nav-item dropdown">
-                          <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown3" role="button" data-bs-toggle="dropdown" aria-expanded="false">Páginas</a>
-                          <ul className="dropdown-menu" aria-labelledby="navbarDropdown3">
-                            <li><a className="dropdown-item" href="/sobre">Sobre Nós</a></li>
-                            <li><a className="dropdown-item" href="/concursos">Concursos</a></li>
-                            <li><a className="dropdown-item" href="/simulados">Simulados</a></li>
-                            <li><a className="dropdown-item" href="/forum">Fórum</a></li>
-                            <li><a className="dropdown-item" href="/planos">Planos</a></li>
-                            <li><a className="dropdown-item" href="/instrutores">Instrutores</a></li>
-                            <li><a className="dropdown-item" href="/faq">FAQ</a></li>
-                          </ul>
-                        </li>
-                        <li className="nav-item dropdown">
-                          <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown4" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Blog
-                          </a>
-                          <ul className="dropdown-menu" aria-labelledby="navbarDropdown4">
-                            <li><a className="dropdown-item" href="/blog">Blog Grid</a></li>
-                            <li><a className="dropdown-item" href="/blog-details">Blog Details</a></li>
-                          </ul>
-                        </li>
-                        <li className="nav-item">
-                          <a className="nav-link" href="/contato" id="navbarDropdown5" role="button" aria-expanded="false">Contato</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </nav>
+            </nav>
+
+            {/* Right Side Actions */}
+            <div className="flex items-center space-x-3">
+              <div className="hidden md:flex items-center space-x-3">
+                <Link
+                  href="/cadastro"
+                  className="theme_btn free_btn text-xs px-3 py-2 bg-orange-400 hover:bg-orange-500 text-white rounded-md font-semibold transition-all duration-300 border-2 border-gray-800 shadow-[3px_3px_0px_0px_#2d2d2d] hover:shadow-[1px_1px_0px_0px_#2d2d2d] hover:translate-x-0.5 hover:translate-y-0.5"
+                >
+                  Teste Grátis
+                </Link>
+                <Link
+                  href="/auth/signin"
+                  className="sign-in flex items-center justify-center w-8 h-8 border-2 border-gray-800 rounded-md text-gray-800 hover:bg-orange-500 hover:text-white transition-all duration-300"
+                >
+                  <User className="h-4 w-4" />
+                </Link>
               </div>
-              <div className="col-xl-3 col-lg-2 col-7">
-                <div className="right-nav flex items-center justify-end space-x-4">
-                  <div className="right-btn hidden md:block">
-                    <div className="flex items-center space-x-4">
-                      <Link href="/cadastro" className="theme_btn free_btn text-sm px-4 py-2">Teste Grátis</Link>
-                      <Link className="sign-in" href="/auth/signin">
-                        <User className="h-5 w-5" />
-                      </Link>
-                    </div>
-                  </div>
-                  <div className="hamburger-menu block lg:hidden">
-                    <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2">
-                      {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-                    </button>
-                  </div>
-                </div>
-              </div>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="lg:hidden p-2 text-gray-700 hover:text-orange-500 transition-colors"
+              >
+                {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
             </div>
           </div>
         </div>
       </header>
 
       {/* Mobile Menu */}
-      <aside className={`slide-bar fixed top-0 right-0 h-full w-80 bg-white shadow-lg transform transition-transform duration-300 z-50 ${mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-        <div className="close-mobile-menu p-4 text-right">
-          <button onClick={() => setMobileMenuOpen(false)} className="p-2">
+      <aside
+        className={`slide-bar fixed top-0 right-0 h-full w-80 bg-white shadow-xl transform transition-transform duration-300 z-50 ${
+          mobileMenuOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        <div className="flex justify-end p-4">
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="p-2 text-gray-700 hover:text-orange-500 transition-colors"
+          >
             <X className="h-6 w-6" />
           </button>
         </div>
-        <div className="offset-sidebar p-6">
-          <div className="offset-widget offset-logo mb-8">
-            <a href="/">
-              <img src="/img/logo/header_logo_one.svg" alt="Concursify" className="h-8" />
-            </a>
+
+        <div className="px-6 pb-6">
+          <div className="mb-8">
+            <Link href="/" className="block">
+              <img src="/placeholder.svg?height=32&width=120&text=Concursify" alt="Concursify" className="h-8 w-auto" />
+            </Link>
           </div>
-          <div className="offset-widget mb-8">
-            <div className="info-widget">
-              <h4 className="text-lg font-semibold mb-4">Sobre Nós</h4>
-              <p className="text-sm text-gray-600 mb-6">
-                Plataforma completa para preparação de concursos públicos com inteligência artificial, 
-                simulados adaptativos e ferramentas avançadas.
-              </p>
-              <a className="theme_btn theme_btn_bg inline-block px-4 py-2 bg-[#FF723A] text-white rounded" href="/contato">Fale Conosco</a>
-            </div>
+
+          <div className="mb-8">
+            <h4 className="text-lg font-semibold mb-4 text-gray-900">Sobre Nós</h4>
+            <p className="text-sm text-gray-600 mb-6 leading-relaxed">
+              Plataforma completa para preparação de concursos públicos com inteligência artificial, simulados
+              adaptativos e ferramentas avançadas.
+            </p>
+            <Link
+              href="/contato"
+              className="inline-block px-4 py-2 bg-orange-500 text-white rounded-md font-semibold hover:bg-orange-600 transition-colors"
+            >
+              Fale Conosco
+            </Link>
           </div>
-          <div className="offset-widget mb-6">
-            <div className="info-widget">
-              <h4 className="text-lg font-semibold mb-4">Contato</h4>
-              <div className="space-y-2 text-sm text-gray-600">
-                <p className="flex items-center"><MapPin className="h-4 w-4 mr-2" /> São Paulo, SP - Brasil</p>
-                <p className="flex items-center"><Phone className="h-4 w-4 mr-2" /> +55 11 99999-9999</p>
-                <p className="flex items-center"><Mail className="h-4 w-4 mr-2" /> contato@concursify.com</p>
+
+          <div className="mb-6">
+            <h4 className="text-lg font-semibold mb-4 text-gray-900">Contato</h4>
+            <div className="space-y-3 text-sm text-gray-600">
+              <div className="flex items-center">
+                <MapPin className="h-4 w-4 mr-3 text-orange-500" />
+                <span>São Paulo, SP - Brasil</span>
+              </div>
+              <div className="flex items-center">
+                <Phone className="h-4 w-4 mr-3 text-orange-500" />
+                <span>+55 11 99999-9999</span>
+              </div>
+              <div className="flex items-center">
+                <Mail className="h-4 w-4 mr-3 text-orange-500" />
+                <span>contato@concursify.com</span>
               </div>
             </div>
           </div>
-          <div className="offset-widget">
-            <div className="flex space-x-4 mt-6">
-              <Link href="/cadastro" className="flex-1 text-center py-2 px-4 bg-[#FF723A] text-white rounded">Teste Grátis</Link>
-              <Link href="/auth/signin" className="flex-1 text-center py-2 px-4 border border-[#FF723A] text-[#FF723A] rounded">Login</Link>
-            </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <Link
+              href="/cadastro"
+              className="text-center py-2 px-4 bg-orange-500 text-white rounded-md font-semibold hover:bg-orange-600 transition-colors"
+            >
+              Teste Grátis
+            </Link>
+            <Link
+              href="/auth/signin"
+              className="text-center py-2 px-4 border border-orange-500 text-orange-500 rounded-md font-semibold hover:bg-orange-50 transition-colors"
+            >
+              Login
+            </Link>
           </div>
         </div>
       </aside>
-      {mobileMenuOpen && <div className="body-overlay fixed inset-0 bg-black bg-opacity-50 z-40" onClick={() => setMobileMenuOpen(false)}></div>}
+
+      {mobileMenuOpen && (
+        <div
+          className="body-overlay fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setMobileMenuOpen(false)}
+        />
+      )}
 
       <main>
         {/* Hero Section */}
-        <section className="slider-area pt-24 md:pt-32 lg:pt-40 pb-8">
-          <img className="sl-shape shape_01" src="/img/icon/01.svg" alt="" />
-          <img className="sl-shape shape_02" src="/img/icon/02.svg" alt="" />
-          <img className="sl-shape shape_03" src="/img/icon/03.svg" alt="" />
-          <img className="sl-shape shape_04" src="/img/icon/04.svg" alt="" />
-          <img className="sl-shape shape_05" src="/img/icon/05.svg" alt="" />
-          <img className="sl-shape shape_06" src="/img/icon/06.svg" alt="" />
-          <img className="sl-shape shape_07" src="/img/shape/dot-box-5.svg" alt="" />
-          
-          <div className="main-slider pt-10">
-            <div className="container">
-              <div className="row align-items-center">
-                <div className="col-xl-6 col-lg-6 order-last order-lg-first">
-                  <div className="slider__img__box mb-50 pr-30">
-                    <img className="img-one mt-55 pr-70" src="/img/slider/01.png" alt="" />
-                    <img className="slide-shape img-two" src="/img/slider/02.png" alt="" />
-                    <img className="slide-shape img-three" src="/img/slider/03.png" alt="" />
-                    <img className="slide-shape img-four" src="/img/shape/dot-box-1.svg" alt="" />
-                    <img className="slide-shape img-five" src="/img/shape/dot-box-2.svg" alt="" />
-                    <img className="slide-shape img-six" src="/img/shape/zigzg-1.svg" alt="" />
-                    <img className="slide-shape img-seven wow fadeInRight animated" data-delay="1.5s" src="/img/icon/dot-plan-1.svg" alt="" />
-                    <img className="slide-shape img-eight" src="/img/slider/earth-bg.svg" alt="" />
+        <section className="hero-section relative pt-20 md:pt-24 lg:pt-28 pb-16 lg:pb-20 overflow-hidden">
+          {/* Background Shapes */}
+          <div className="absolute inset-0 pointer-events-none">
+            <img
+              className="absolute top-1/4 left-[5%] w-10 h-10 animate-float"
+              src="/placeholder.svg?height=40&width=40&text=Shape1"
+              alt=""
+            />
+            <img
+              className="absolute top-1/3 right-[10%] w-10 h-10 animate-float-reverse"
+              src="/placeholder.svg?height=40&width=40&text=Shape2"
+              alt=""
+            />
+            <img
+              className="absolute bottom-1/3 left-[10%] w-10 h-10 animate-bounce-slow"
+              src="/placeholder.svg?height=40&width=40&text=Shape3"
+              alt=""
+            />
+            <img
+              className="absolute top-3/5 right-1/5 w-10 h-10 animate-float-slow"
+              src="/placeholder.svg?height=40&width=40&text=Shape4"
+              alt=""
+            />
+            <img
+              className="absolute bottom-1/5 right-[5%] w-10 h-10 animate-bounce-slow"
+              src="/placeholder.svg?height=40&width=40&text=Shape5"
+              alt=""
+            />
+            <img
+              className="absolute top-[10%] left-1/5 w-10 h-10 animate-float"
+              src="/placeholder.svg?height=40&width=40&text=Shape6"
+              alt=""
+            />
+            <img
+              className="absolute bottom-[10%] left-[30%] w-15 h-15 opacity-30"
+              src="/placeholder.svg?height=60&width=60&text=Dots"
+              alt=""
+            />
+          </div>
+
+          <div className="container mx-auto px-4 lg:px-6">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              {/* Content */}
+              <div className="order-2 lg:order-1 text-center lg:text-left">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+                  Sua Aprovação em Concursos com{" "}
+                  <span className="relative text-orange-500">
+                    Inteligência Artificial
+                    <span className="absolute bottom-0 left-0 w-full h-2 bg-orange-500 opacity-30 rounded-sm"></span>
+                  </span>
+                </h1>
+
+                <p className="text-lg md:text-xl text-gray-600 mb-8 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                  Cronogramas personalizados, simulados adaptativos, comunidade ativa e ferramentas inteligentes para turbinar seus estudos e garantir sua aprovação.
+                </p>
+
+                {/* Search Area */}
+                <div className="flex flex-col md:flex-row gap-4 mb-8 max-w-4xl mx-auto lg:mx-0">
+                  <div className="flex-1 relative">
+                    <input
+                      type="text"
+                      placeholder="Buscar Concursos"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="w-full px-4 py-3 border-2 border-gray-800 rounded-lg text-base shadow-[2px_2px_0px_0px_#2d2d2d] focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                    />
+                    <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-orange-500 transition-colors">
+                      <Search className="h-5 w-5" />
+                    </button>
                   </div>
+
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => setSelectedCategory(e.target.value)}
+                    className="px-4 py-3 border-2 border-gray-800 rounded-lg bg-white text-base shadow-[2px_2px_0px_0px_#2d2d2d] focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 min-w-[150px]"
+                  >
+                    <option value="">Áreas</option>
+                    <option value="juridico">Jurídico</option>
+                    <option value="saude">Saúde</option>
+                    <option value="educacao">Educação</option>
+                    <option value="tecnologia">Tecnologia</option>
+                    <option value="seguranca">Segurança</option>
+                  </select>
+
+                  <button className="px-6 py-3 bg-orange-500 text-white font-semibold rounded-lg border-2 border-gray-800 shadow-[3px_3px_0px_0px_#2d2d2d] hover:shadow-[1px_1px_0px_0px_#2d2d2d] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-300 whitespace-nowrap">
+                    Buscar Agora
+                  </button>
                 </div>
-                <div className="col-xl-6 col-lg-6">
-                  <div className="slider__content pt-15">
-                    <h1 className="main-title mb-40 wow fadeInUp2 animated" data-wow-delay='.1s'>
-                      Prepare-se Todo Dia & Aprenda Novas Estratégias Online com os Melhores <span className="vec-shape">Instrutores.</span>
-                    </h1>
-                    <h5 className="mb-35 wow fadeInUp2 animated" data-wow-delay='.2s'>
-                      Existem muitas maneiras de se preparar para concursos públicos, mas a maioria sofre com a falta de organização e estratégia adequada.
-                    </h5>
-                    <ul className="search__area d-md-inline-flex align-items-center justify-content-between mb-30">
-                      <li>
-                        <div className="widget__search">
-                          <form className="input-form" action="#">
-                            <input 
-                              type="text" 
-                              placeholder="Buscar Concursos"
-                              value={searchQuery}
-                              onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                          </form>
-                          <button className="search-icon"><i className="far fa-search"></i></button>
-                        </div>
-                      </li>
-                      <li>
-                        <div className="widget__select">
-                          <select 
-                            name="select-cat" 
-                            id="select"
-                            value={selectedCategory}
-                            onChange={(e) => setSelectedCategory(e.target.value)}
-                          >
-                            <option value="">Áreas</option>
-                            <option value="juridico">Jurídico</option>
-                            <option value="saude">Saúde</option>
-                            <option value="educacao">Educação</option>
-                            <option value="tecnologia">Tecnologia</option>
-                            <option value="seguranca">Segurança</option>
-                          </select>
-                        </div>
-                      </li>
-                      <li>
-                        <button className="theme_btn search_btn ml-35">Buscar Agora</button>
-                      </li>
-                    </ul>
-                    <p className="highlight-text">
-                      <span>#1</span> Plataforma Mundial de Aprendizado Online & Preparação para Concursos
-                    </p>
+
+                <div className="flex items-center justify-center lg:justify-start text-gray-600">
+                  <span className="bg-orange-500 text-white px-2 py-1 rounded text-sm font-bold mr-2">#1</span>
+                  <span className="text-sm">Plataforma de Preparação para Concursos com Inteligência Artificial</span>
+                </div>
+              </div>
+
+              {/* Image */}
+              <div className="order-1 lg:order-2 relative">
+                <div className="relative max-w-lg mx-auto">
+                  <img
+                    src="/placeholder.svg?height=400&width=500&text=Hero+Image"
+                    alt="Hero"
+                    className="w-full h-auto relative z-10"
+                  />
+
+                  {/* Floating Elements */}
+                  <img
+                    className="absolute top-1/5 -right-[10%] w-20 h-20 animate-float z-0"
+                    src="/placeholder.svg?height=80&width=80&text=Float1"
+                    alt=""
+                  />
+                  <img
+                    className="absolute bottom-1/5 -left-[5%] w-20 h-20 animate-bounce-slow z-0"
+                    src="/placeholder.svg?height=80&width=80&text=Float2"
+                    alt=""
+                  />
+                  <img
+                    className="absolute top-[10%] left-[10%] w-15 h-15 opacity-30 z-0"
+                    src="/placeholder.svg?height=60&width=60&text=Dots1"
+                    alt=""
+                  />
+                  <img
+                    className="absolute bottom-[10%] right-[10%] w-15 h-15 opacity-30 z-0"
+                    src="/placeholder.svg?height=60&width=60&text=Dots2"
+                    alt=""
+                  />
+                  <img
+                    className="absolute top-1/2 -left-[10%] w-25 h-25 opacity-20 z-0"
+                    src="/placeholder.svg?height=100&width=100&text=Zigzag"
+                    alt=""
+                  />
+                  <img
+                    className="absolute top-[30%] right-1/5 w-10 h-10 animate-pulse z-0"
+                    src="/placeholder.svg?height=40&width=40&text=Plan"
+                    alt=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="features-section py-16 lg:py-20">
+          <div className="container mx-auto px-4 lg:px-6">
+            <div className="grid lg:grid-cols-4 gap-8 items-start">
+              {/* Title */}
+              <div className="lg:col-span-1 text-center lg:text-left">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                  <span className="font-normal">Recursos</span> Inteligentes Para Você
+                </h2>
+                <p className="text-gray-600 leading-relaxed">
+                  Nossa plataforma utiliza inteligência artificial para personalizar sua experiência de estudos e maximizar suas chances de aprovação.
+                </p>
+              </div>
+
+              {/* Feature Cards */}
+              <div className="lg:col-span-3">
+                <div className="grid md:grid-cols-3 gap-6">
+                  <div className="feature-card bg-white p-6 rounded-xl border-2 border-gray-800 shadow-[4px_4px_0px_0px_#2d2d2d] hover:shadow-[6px_6px_0px_0px_#2d2d2d] hover:-translate-y-1 transition-all duration-300 text-center">
+                    <div className="w-20 h-20 bg-orange-500 rounded-full border-3 border-gray-800 flex items-center justify-center mx-auto mb-6">
+                      <img src="/placeholder.svg?height=40&width=40&text=Puzzle" alt="" className="w-10 h-10" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">Cronogramas com IA</h3>
+                    <p className="text-gray-600">Cronogramas personalizados que se adaptam ao seu ritmo e objetivos de estudo.</p>
+                  </div>
+
+                  <div className="feature-card bg-orange-200 p-6 rounded-xl border-2 border-gray-800 shadow-[4px_4px_0px_0px_#2d2d2d] hover:shadow-[6px_6px_0px_0px_#2d2d2d] hover:-translate-y-1 transition-all duration-300 text-center">
+                    <div className="w-20 h-20 bg-orange-500 rounded-full border-3 border-gray-800 flex items-center justify-center mx-auto mb-6">
+                      <img src="/placeholder.svg?height=40&width=40&text=Manager" alt="" className="w-10 h-10" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">Simulados Adaptativos</h3>
+                    <p className="text-gray-600">Simulados que se ajustam automaticamente ao seu nível de conhecimento.</p>
+                  </div>
+
+                  <div className="feature-card bg-orange-300 p-6 rounded-xl border-2 border-gray-800 shadow-[4px_4px_0px_0px_#2d2d2d] hover:shadow-[6px_6px_0px_0px_#2d2d2d] hover:-translate-y-1 transition-all duration-300 text-center">
+                    <div className="w-20 h-20 bg-orange-500 rounded-full border-3 border-gray-800 flex items-center justify-center mx-auto mb-6">
+                      <img src="/placeholder.svg?height=40&width=40&text=Notepad" alt="" className="w-10 h-10" />
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">Comunidade Ativa</h3>
+                    <p className="text-gray-600">Fórum com milhares de concurseiros compartilhando experiências e dicas.</p>
                   </div>
                 </div>
               </div>
@@ -427,345 +549,413 @@ export function HomePage() {
           </div>
         </section>
 
-        {/* Great Deal Section */}
-        <section className="great-deal-area pt-150 pb-90 pt-md-100 pb-md-40 pt-xs-100 pb-xs-40">
-          <div className="container">
-            <div className="row justify-content-lg-center justify-content-start">
-              <div className="col-xl-3 col-lg-8">
-                <div className="deal-box mb-30 text-center text-xl-start">
-                  <h2 className="mb-20"><b>Ótimas</b> Oportunidades Para Você</h2>
-                  <p>Existem muitas variações de preparação para concursos disponíveis, mas a maioria sofre com falta de organização.</p>
+        {/* CTA Section */}
+        <section className="cta-section relative py-16 lg:py-20 bg-gradient-to-br from-orange-500 to-orange-600 overflow-hidden">
+          {/* Background Blur Shapes */}
+          <div className="absolute top-1/5 left-[10%] w-48 h-48 bg-white bg-opacity-10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-1/5 right-[10%] w-48 h-48 bg-white bg-opacity-10 rounded-full blur-3xl"></div>
+
+          <div className="container mx-auto px-4 lg:px-6 relative z-10">
+            {/* Section Header */}
+            <div className="text-center mb-12 lg:mb-16">
+              <h5 className="text-orange-200 text-sm font-semibold uppercase tracking-wider mb-4">
+                Professores & Estudantes
+              </h5>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+                O que Você Está Procurando?
+              </h2>
+            </div>
+
+            {/* CTA Cards */}
+            <div className="grid md:grid-cols-2 gap-8 lg:gap-12 mb-16 lg:mb-20">
+              <div className="cta-card bg-white p-8 lg:p-10 rounded-xl border-3 border-gray-800 shadow-[6px_6px_0px_0px_#2d2d2d] hover:shadow-[8px_8px_0px_0px_#2d2d2d] hover:-translate-y-2 transition-all duration-300 text-center">
+                <div className="w-24 h-24 bg-orange-500 rounded-full border-3 border-gray-800 flex items-center justify-center mx-auto mb-6">
+                  <img src="/placeholder.svg?height=50&width=50&text=Teacher" alt="" className="w-12 h-12" />
                 </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Você quer ensinar aqui?</h3>
+                <p className="text-gray-600 mb-6 leading-relaxed">
+                  Junte-se à nossa equipe de instrutores especialistas em concursos públicos e ajude milhares de
+                  candidatos a realizarem seus sonhos.
+                </p>
+                <Link
+                  href="/contato"
+                  className="inline-block px-6 py-3 bg-transparent border-2 border-gray-800 text-gray-900 font-semibold rounded-lg shadow-[3px_3px_0px_0px_#2d2d2d] hover:bg-gray-900 hover:text-white hover:shadow-[1px_1px_0px_0px_#2d2d2d] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-300"
+                >
+                  Cadastre-se Agora
+                </Link>
               </div>
-              <div className="col-xl-8">
-                <div className="deal-active owl-carousel mb-30">
-                  <div className="single-item">
-                    <div className="single-box mb-30">
-                      <div className="single-box__icon mb-25">
-                        <img src="/img/icon/puzzle.svg" alt="" />
-                      </div>
-                      <h4 className="sub-title mb-20">Aprenda Novas Estratégias</h4>
-                      <p>Existem muitas variações de técnicas de estudo disponíveis.</p>
-                    </div>
-                  </div>
-                  <div className="single-item">
-                    <div className="single-box s-box2 mb-30">
-                      <div className="single-box__icon mb-25">
-                        <img src="/img/icon/manager.svg" alt="" />
-                      </div>
-                      <h4 className="sub-title mb-20">Instrutores Especialistas</h4>
-                      <p>Existem muitas variações de professores experientes disponíveis.</p>
-                    </div>
-                  </div>
-                  <div className="single-item">
-                    <div className="single-box s-box3 mb-30">
-                      <div className="single-box__icon mb-25">
-                        <img src="/img/icon/notepad.svg" alt="" />
-                      </div>
-                      <h4 className="sub-title mb-20">Simulados Gratuitos</h4>
-                      <p>Existem muitas variações de simulados disponíveis.</p>
-                    </div>
-                  </div>
+
+              <div className="cta-card bg-white p-8 lg:p-10 rounded-xl border-3 border-gray-800 shadow-[6px_6px_0px_0px_#2d2d2d] hover:shadow-[8px_8px_0px_0px_#2d2d2d] hover:-translate-y-2 transition-all duration-300 text-center">
+                <div className="w-24 h-24 bg-orange-500 rounded-full border-3 border-gray-800 flex items-center justify-center mx-auto mb-6">
+                  <img src="/placeholder.svg?height=50&width=50&text=Student" alt="" className="w-12 h-12" />
                 </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">Você quer estudar aqui?</h3>
+                <p className="text-gray-600 mb-6 leading-relaxed">
+                  Comece sua jornada rumo à aprovação com nossa plataforma completa de preparação para concursos
+                  públicos.
+                </p>
+                <Link
+                  href="/cadastro"
+                  className="inline-block px-6 py-3 bg-orange-500 border-2 border-gray-800 text-white font-semibold rounded-lg shadow-[3px_3px_0px_0px_#2d2d2d] hover:bg-orange-600 hover:shadow-[1px_1px_0px_0px_#2d2d2d] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-300"
+                >
+                  Cadastre-se Agora
+                </Link>
               </div>
             </div>
-          </div>
-        </section>
 
-        {/* What Looking For Section */}
-        <section className="what-looking-for pos-rel">
-          <div className="what-blur-shape-one"></div>
-          <div className="what-blur-shape-two"></div>
-          <div className="what-look-bg gradient-bg pt-145 pb-130 pt-md-95 pb-md-80 pt-xs-95 pb-xs-80">
-            <div className="container">
-              <div className="row justify-content-center">
-                <div className="col-lg-8">
-                  <div className="section-title text-center mb-55">
-                    <h5 className="bottom-line mb-25">Professores & Estudantes</h5>
-                    <h2>O que Você Está Procurando?</h2>
-                  </div>
+            {/* Categories */}
+            <div className="text-center mb-12">
+              <h5 className="text-orange-200 text-sm font-semibold uppercase tracking-wider mb-4">
+                Navegar Categorias
+              </h5>
+              <h2 className="text-3xl md:text-4xl font-bold text-white">Explore Nossas Áreas de Concursos</h2>
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-6 mb-12">
+              {[
+                { name: "Jurídico", count: "126+", icon: "Law" },
+                { name: "Tecnologia", count: "325+", icon: "Tech" },
+                { name: "Saúde", count: "95+", icon: "Health" },
+                { name: "Educação", count: "156+", icon: "Education" },
+                { name: "Segurança", count: "136+", icon: "Security" },
+              ].map((category, index) => (
+                <div
+                  key={index}
+                  className="category-card bg-white p-4 lg:p-6 rounded-xl border-2 border-gray-800 shadow-[3px_3px_0px_0px_#2d2d2d] hover:shadow-[5px_5px_0px_0px_#2d2d2d] hover:-translate-y-1 hover:bg-orange-500 hover:text-white group transition-all duration-300 text-center"
+                >
+                  <img
+                    src={`/placeholder.svg?height=48&width=48&text=${category.icon}`}
+                    alt=""
+                    className="w-12 h-12 mx-auto mb-4"
+                  />
+                  <h4 className="font-bold text-gray-900 group-hover:text-white mb-2">
+                    <Link href="/concursos">{category.name}</Link>
+                  </h4>
+                  <p className="text-sm text-gray-600 group-hover:text-orange-100">
+                    {category.count} Concursos Disponíveis
+                  </p>
                 </div>
-              </div>
-              <div className="row mb-85">
-                <div className="col-xl-6 col-lg-6 col-md-6">
-                  <div className="what-box text-center mb-35 wow fadeInUp2 animated" data-wow-delay='.3s'>
-                    <div className="what-box__icon mb-30">
-                      <img src="/img/icon/phone-operator.svg" alt="" />
-                    </div>
-                    <h3>Você quer ensinar aqui?</h3>
-                    <p>Junte-se à nossa equipe de instrutores especialistas em concursos públicos e ajude milhares de candidatos a realizarem seus sonhos.</p>
-                    <a href="/contato" className="theme_btn border_btn">Cadastre-se Agora</a>
-                  </div>
-                </div>
-                <div className="col-xl-6 col-lg-6 col-md-6">
-                  <div className="what-box text-center mb-35 wow fadeInUp2 animated" data-wow-delay='.3s'>
-                    <div className="what-box__icon mb-30">
-                      <img src="/img/icon/graduate.svg" alt="" />
-                    </div>
-                    <h3>Você quer estudar aqui?</h3>
-                    <p>Comece sua jornada rumo à aprovação com nossa plataforma completa de preparação para concursos públicos.</p>
-                    <a href="/cadastro" className="theme_btn border_btn active">Cadastre-se Agora</a>
-                  </div>
-                </div>
-              </div>
-              <div className="categoris-container">
-                <div className="col-xl-12">
-                  <div className="section-title text-center mb-55">
-                    <h5 className="bottom-line mb-25">Navegar Categorias</h5>
-                    <h2>Explore Nossas Áreas de Concursos</h2>
-                  </div>
-                </div>
-                <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-3 row-cols-xl-5">
-                  <div className="col">
-                    <div className="single-category text-center mb-30 wow fadeInUp2 animated" data-wow-delay='.1s'>
-                      <img className="mb-30" src="/img/category-icon/atom.svg" alt="" />
-                      <h4 className="sub-title mb-10"><a href="/concursos">Jurídico</a></h4>
-                      <p>126+ Concursos Disponíveis</p>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="single-category text-center mb-30 wow fadeInUp2 animated" data-wow-delay='.2s'>
-                      <img className="mb-30" src="/img/category-icon/web-development.svg" alt="" />
-                      <h4 className="sub-title mb-10"><a href="/concursos">Tecnologia</a></h4>
-                      <p>325+ Concursos Disponíveis</p>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="single-category text-center mb-30 wow fadeInUp2 animated" data-wow-delay='.3s'>
-                      <img className="mb-30" src="/img/category-icon/atom.svg" alt="" />
-                      <h4 className="sub-title mb-10"><a href="/concursos">Saúde</a></h4>
-                      <p>95+ Concursos Disponíveis</p>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="single-category text-center mb-30 wow fadeInUp2 animated" data-wow-delay='.4s'>
-                      <img className="mb-30" src="/img/category-icon/career-path.svg" alt="" />
-                      <h4 className="sub-title mb-10"><a href="/concursos">Educação</a></h4>
-                      <p>156+ Concursos Disponíveis</p>
-                    </div>
-                  </div>
-                  <div className="col">
-                    <div className="single-category text-center mb-30 wow fadeInUp2 animated" data-wow-delay='.5s'>
-                      <img className="mb-30" src="/img/category-icon/graphic-tool.svg" alt="" />
-                      <h4 className="sub-title mb-10"><a href="/concursos">Segurança</a></h4>
-                      <p>136+ Concursos Disponíveis</p>
-                    </div>
-                  </div>
-                </div>
-                <div className="row justify-content-center">
-                  <div className="col-md-12 mt-20 text-center mb-20 wow fadeInUp2 animated" data-wow-delay='.6s'>
-                    <a href="/concursos" className="theme_btn">Todas as Categorias</a>
-                  </div>
-                </div>
-              </div>
+              ))}
+            </div>
+
+            <div className="text-center">
+              <Link
+                href="/concursos"
+                className="inline-block px-8 py-3 bg-white text-orange-500 font-semibold rounded-lg border-2 border-gray-800 shadow-[3px_3px_0px_0px_#2d2d2d] hover:bg-gray-50 hover:shadow-[1px_1px_0px_0px_#2d2d2d] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-300"
+              >
+                Todas as Categorias
+              </Link>
             </div>
           </div>
         </section>
 
         {/* Featured Courses Section */}
-        <section className="feature-course pt-150 pb-130 pt-md-95 pb-md-80 pt-xs-95 pb-xs-80">
-          <div className="container">
-            <div className="row">
-              <div className="col-xl-12">
-                <div className="section-title text-center mb-50">
-                  <h5 className="bottom-line mb-25">Concursos em Destaque</h5>
-                  <h2>Explore Nossos Concursos Populares</h2>
-                </div>
-              </div>
+        <section className="courses-section py-16 lg:py-20">
+          <div className="container mx-auto px-4 lg:px-6">
+            {/* Section Header */}
+            <div className="text-center mb-12 lg:mb-16">
+              <h5 className="text-orange-500 text-sm font-semibold uppercase tracking-wider mb-4">
+                Concursos em Destaque
+              </h5>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900">
+                Explore Nossos Concursos Populares
+              </h2>
             </div>
-            <div className="row justify-content-center">
-              <div className="col-xl-12 text-center">
-                <div className="portfolio-menu mb-30">
-                  <button className="gf_btn active" data-filter='*'>Todos</button>
-                  <button className="gf_btn" data-filter='.cat1'>Jurídico</button>
-                  <button className="gf_btn" data-filter='.cat2'>Segurança</button>
-                  <button className="gf_btn" data-filter='.cat3'>Tributário</button>
-                  <button className="gf_btn" data-filter='.cat4'>Saúde</button>
-                  <button className="gf_btn" data-filter='.cat5'>Educação</button>
-                </div>
-              </div>
+
+            {/* Filter Buttons */}
+            <div className="flex flex-wrap justify-center gap-3 mb-12">
+              {["Todos", "Jurídico", "Segurança", "Tributário", "Saúde", "Educação"].map((filter, index) => (
+                <button
+                  key={index}
+                  className={`px-4 py-2 font-semibold rounded-lg border-2 border-gray-800 shadow-[2px_2px_0px_0px_#2d2d2d] hover:shadow-[3px_3px_0px_0px_#2d2d2d] hover:-translate-y-0.5 transition-all duration-300 ${
+                    index === 0
+                      ? "bg-orange-500 text-white"
+                      : "bg-white text-gray-900 hover:bg-orange-500 hover:text-white"
+                  }`}
+                >
+                  {filter}
+                </button>
+              ))}
             </div>
-            <div className="grid row">
+
+            {/* Courses Grid */}
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12">
               {concursos.map((concurso) => (
-                <div key={concurso.id} className={`col-lg-4 col-md-6 grid-item ${concurso.category}`}>
-                  <div className="z-gallery mb-30">
-                    <div className="z-gallery__thumb mb-20">
-                      <a href="/concursos"><img className="img-fluid" src={concurso.image} alt="" /></a>
-                      <div className="feedback-tag">{concurso.rating}</div>
-                      <div className="heart-icon"><i className="fas fa-heart"></i></div>
+                <div
+                  key={concurso.id}
+                  className="course-card bg-white rounded-xl border-2 border-gray-800 shadow-[4px_4px_0px_0px_#2d2d2d] hover:shadow-[6px_6px_0px_0px_#2d2d2d] hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                >
+                  <div className="relative">
+                    <img
+                      src={concurso.image || "/placeholder.svg"}
+                      alt={concurso.title}
+                      className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+                    />
+                    <div className="absolute top-4 left-4 bg-orange-500 text-white px-2 py-1 rounded-full text-sm font-semibold border-2 border-gray-800">
+                      {concurso.rating}
                     </div>
-                    <div className="z-gallery__content">
-                      <div className="course__tag mb-15">
-                        <span>{concurso.area}</span>
-                        <span>{concurso.nivel}</span>
-                        <a className="f-right" href="/instrutores">
-                          <img src={concurso.instructor} alt="" />
-                        </a>
+                    <button className="absolute top-4 right-4 w-10 h-10 bg-white border-2 border-gray-800 rounded-full flex items-center justify-center text-orange-500 hover:bg-orange-500 hover:text-white transition-all duration-300">
+                      <Heart className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  <div className="p-6">
+                    <div className="flex items-center gap-2 mb-4">
+                      <span className="bg-orange-300 text-gray-900 px-3 py-1 rounded-full text-xs font-semibold border border-gray-800">
+                        {concurso.area}
+                      </span>
+                      <span className="bg-orange-300 text-gray-900 px-3 py-1 rounded-full text-xs font-semibold border border-gray-800">
+                        {concurso.nivel}
+                      </span>
+                      <img
+                        src={concurso.instructor || "/placeholder.svg"}
+                        alt="Instructor"
+                        className="w-8 h-8 rounded-full border-2 border-gray-800 ml-auto"
+                      />
+                    </div>
+
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 hover:text-orange-500 transition-colors">
+                      <Link href="/concursos">{concurso.title}</Link>
+                    </h3>
+
+                    <div className="flex items-center justify-between text-sm text-gray-600">
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-1">
+                          <Clock className="h-4 w-4" />
+                          <span>{concurso.tempo}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <BarChart className="h-4 w-4" />
+                          <span>{concurso.nivel_icon}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <User className="h-4 w-4" />
+                          <span>{concurso.estudantes}</span>
+                        </div>
                       </div>
-                      <h4 className="sub-title mb-20">
-                        <a href="/concursos">{concurso.title}</a>
-                      </h4>
-                      <div className="course__meta">
-                        <span>
-                          <img className="icon" src="/img/icon/time.svg" alt="" /> 
-                          {concurso.tempo}
-                        </span>
-                        <span>
-                          <img className="icon" src="/img/icon/bar-chart.svg" alt="" /> 
-                          {concurso.nivel_icon}
-                        </span>
-                        <span>
-                          <img className="icon" src="/img/icon/user.svg" alt="" /> 
-                          {concurso.estudantes}
-                        </span>
-                        <span>{concurso.preco}</span>
-                      </div>
+                      <span className="text-lg font-bold text-orange-500">{concurso.preco}</span>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
-            <div className="row">
-              <div className="col-lg-12 mt-20 text-center mb-20 wow fadeInUp2 animated" data-wow-delay='.3s'>
-                <a href="/concursos" className="theme_btn">Todos os Concursos</a>
+
+            <div className="text-center">
+              <Link
+                href="/concursos"
+                className="inline-block px-8 py-3 bg-orange-500 text-white font-semibold rounded-lg border-2 border-gray-800 shadow-[3px_3px_0px_0px_#2d2d2d] hover:bg-orange-600 hover:shadow-[1px_1px_0px_0px_#2d2d2d] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-300"
+              >
+                Todos os Concursos
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* Why Choose Us Section */}
+        <section className="why-choose-section py-16 lg:py-20 bg-gradient-to-br from-orange-500 to-orange-600 mx-4 lg:mx-12 rounded-2xl overflow-hidden relative">
+          <div className="container mx-auto px-4 lg:px-6">
+            <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+              {/* Image Side */}
+              <div className="relative">
+                {/* Stats Card */}
+                <div className="absolute top-8 left-8 bg-white p-4 rounded-xl border-2 border-gray-800 shadow-[3px_3px_0px_0px_#2d2d2d] z-10">
+                  <h5 className="text-sm font-semibold text-gray-600 mb-2">Total de Estudantes</h5>
+                  <div className="flex items-center mb-2">
+                    <img
+                      className="w-8 h-8 rounded-full border-2 border-white -mr-2"
+                      src="/placeholder.svg?height=32&width=32&text=U1"
+                      alt=""
+                    />
+                    <img
+                      className="w-8 h-8 rounded-full border-2 border-white -mr-2"
+                      src="/placeholder.svg?height=32&width=32&text=U2"
+                      alt=""
+                    />
+                    <img
+                      className="w-8 h-8 rounded-full border-2 border-white -mr-2"
+                      src="/placeholder.svg?height=32&width=32&text=U3"
+                      alt=""
+                    />
+                    <img
+                      className="w-8 h-8 rounded-full border-2 border-white"
+                      src="/placeholder.svg?height=32&width=32&text=U4"
+                      alt=""
+                    />
+                  </div>
+                  <span className="text-xl font-bold text-orange-500">25k+</span>
+                </div>
+
+                {/* Feature Tags */}
+                <div className="absolute top-1/2 -right-8 bg-white px-4 py-2 rounded-full border-2 border-gray-800 shadow-[3px_3px_0px_0px_#2d2d2d] flex items-center gap-2 text-sm font-semibold text-gray-900 z-10">
+                  <span className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
+                    <img src="/placeholder.svg?height=16&width=16&text=Shield" alt="" className="w-4 h-4" />
+                  </span>
+                  Seguro & Protegido
+                </div>
+
+                <div className="absolute bottom-1/3 -left-8 bg-white px-4 py-2 rounded-full border-2 border-gray-800 shadow-[3px_3px_0px_0px_#2d2d2d] flex items-center gap-2 text-sm font-semibold text-gray-900 z-10">
+                  <span className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center">
+                    <img src="/placeholder.svg?height=16&width=16&text=Catalog" alt="" className="w-4 h-4" />
+                  </span>
+                  120+ Concursos
+                </div>
+
+                <div className="absolute bottom-12 right-8 bg-white px-4 py-2 rounded-full border-2 border-gray-800 shadow-[3px_3px_0px_0px_#2d2d2d] flex items-center gap-2 text-sm font-semibold text-gray-900 z-10">
+                  <span className="w-6 h-6 bg-orange-500 rounded-full flex items-center justify-center text-white">
+                    <Check className="h-4 w-4" />
+                  </span>
+                  Educação de Qualidade
+                </div>
+
+                {/* Video Button */}
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+                  <a
+                    href="https://www.youtube.com/watch?v=7omGYwdcS04"
+                    className="w-20 h-20 bg-orange-500 border-3 border-white rounded-full flex items-center justify-center text-white hover:scale-110 transition-transform duration-300 animate-pulse"
+                  >
+                    <Play className="h-8 w-8 ml-1" />
+                  </a>
+                </div>
+
+                {/* Main Image */}
+                <div className="relative z-0">
+                  <img
+                    src="/placeholder.svg?height=400&width=500&text=Why+Choose+Us"
+                    alt="Why Choose Us"
+                    className="w-full h-auto rounded-xl"
+                  />
+                </div>
+
+                {/* Decorative Dots */}
+                <img
+                  className="absolute -bottom-8 -right-8 w-15 h-15 opacity-30"
+                  src="/placeholder.svg?height=60&width=60&text=Dots"
+                  alt=""
+                />
+              </div>
+
+              {/* Content Side */}
+              <div className="text-white">
+                <h5 className="text-orange-200 text-sm font-semibold uppercase tracking-wider mb-4">
+                  Explore o Concursify
+                </h5>
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">Por que Escolher o Concursify?</h2>
+                <p className="text-orange-100 text-lg mb-8 leading-relaxed">
+                  Nossa plataforma revoluciona a preparação para concursos com inteligência artificial, oferecendo estudos personalizados, simulados adaptativos e uma comunidade engajada para sua aprovação.
+                </p>
+
+                <ul className="space-y-4 mb-8">
+                  {[
+                    "Cronogramas personalizados com inteligência artificial.",
+                    "Simulados adaptativos que se ajustam ao seu nível.",
+                    "Comunidade ativa com milhares de concurseiros.",
+                  ].map((item, index) => (
+                    <li key={index} className="flex items-start gap-3">
+                      <span className="w-6 h-6 bg-white bg-opacity-20 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0 mt-0.5">
+                        ✓
+                      </span>
+                      <span className="text-orange-100">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Link
+                  href="/sobre"
+                  className="inline-block px-8 py-3 bg-white text-orange-500 font-semibold rounded-lg border-2 border-gray-800 shadow-[3px_3px_0px_0px_#2d2d2d] hover:bg-gray-50 hover:shadow-[1px_1px_0px_0px_#2d2d2d] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-300"
+                >
+                  Mais Detalhes
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Instructors Section */}
+          <div className="mt-16 lg:mt-20 bg-gray-50 py-16 lg:py-20 -mx-4 lg:-mx-6 relative">
+            {/* Background Blur */}
+            <div className="absolute top-1/5 right-[10%] w-72 h-72 bg-orange-500 bg-opacity-10 rounded-full blur-3xl"></div>
+
+            <div className="container mx-auto px-4 lg:px-6 relative z-10">
+              <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-12 lg:mb-16">
+                <div className="text-center lg:text-left mb-8 lg:mb-0">
+                  <h5 className="text-orange-500 text-sm font-semibold uppercase tracking-wider mb-4">
+                    Nossos Instrutores
+                  </h5>
+                  <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Explore Instrutores Experientes</h2>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+                {instrutores.map((instrutor, index) => (
+                  <div
+                    key={index}
+                    className="instructor-card bg-white p-6 rounded-xl border-2 border-gray-800 shadow-[4px_4px_0px_0px_#2d2d2d] hover:shadow-[6px_6px_0px_0px_#2d2d2d] hover:-translate-y-1 transition-all duration-300 text-center group"
+                  >
+                    <div className="relative mb-6">
+                      <img
+                        src={instrutor.image || "/placeholder.svg"}
+                        alt={instrutor.name}
+                        className="w-24 h-24 rounded-full border-3 border-gray-800 object-cover mx-auto"
+                      />
+                      <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-orange-500 border-2 border-gray-800 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div className="flex space-x-1">
+                          <Facebook className="h-3 w-3 text-white" />
+                        </div>
+                      </div>
+                    </div>
+
+                    <h4 className="text-lg font-bold text-gray-900 mb-2 hover:text-orange-500 transition-colors">
+                      <Link href="/instrutores">{instrutor.name}</Link>
+                    </h4>
+                    <p className="text-gray-600 text-sm">{instrutor.specialty}</p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
-        {/* Why Choose Section */}
-        <div className="why-chose-section-wrapper gradient-bg mr-100 ml-100">
-          <section className="why-chose-us">
-            <div className="why-chose-us-bg pt-150 pb-175 pt-md-95 pb-md-90 pt-xs-95 pb-xs-90">
-              <div className="container">
-                <div className="row align-items-center">
-                  <div className="col-xl-7 col-lg-7">
-                    <div className="chose-img-wrapper mb-50 pos-rel">
-                      <div className="coures-member">
-                        <h5>Total de Estudantes</h5>
-                        <img className="choses chose_01" src="/img/chose/01.png" alt="" />
-                        <img className="choses chose_02" src="/img/chose/02.png" alt="" />
-                        <img className="choses chose_03" src="/img/chose/03.png" alt="" />
-                        <img className="choses chose_04" src="/img/chose/04.png" alt="" />
-                        <span>25k+</span>
-                      </div>
-                      <div className="feature tag_01">
-                        <span><img src="/img/icon/shield-check.svg" alt="" /></span> 
-                        Seguro & Protegido
-                      </div>
-                      <div className="feature tag_02">
-                        <span><img src="/img/icon/catalog.svg" alt="" /></span> 
-                        120+ Concursos
-                      </div>
-                      <div className="feature tag_03">
-                        <span><i className="fal fa-check"></i></span> 
-                        Educação de Qualidade
-                      </div>
-                      <div className="video-wrapper">
-                        <a href="https://www.youtube.com/watch?v=7omGYwdcS04" className="popup-video">
-                          <i className="fas fa-play"></i>
-                        </a>
-                      </div>
-                      <div className="img-bg pos-rel">
-                        <img className="chose_05 pl-70 pl-lg-0 pl-md-0 pl-xs-0" src="/img/chose/05.png" alt="" />
-                      </div>
-                      <img className="chose chose_06" src="/img/shape/dot-box3.svg" alt="" />
-                    </div>
-                  </div>
-                  <div className="col-xl-5 col-lg-5">
-                    <div className="chose-wrapper pl-25 pl-lg-0 pl-md-0 pl-xs-0">
-                      <div className="section-title mb-30 wow fadeInUp2 animated" data-wow-delay='.1s'>
-                        <h5 className="bottom-line mb-25">Explore o Concursify</h5>
-                        <h2 className="mb-25">Por que Escolher o Concursify?</h2>
-                        <p>Existem muitas variações de plataformas de preparação para concursos disponíveis, mas a maioria sofre com falta de personalização. Existem muitas variações de métodos de estudo disponíveis.</p>
-                      </div>
-                      <ul className="text-list mb-40 wow fadeInUp2 animated" data-wow-delay='.2s'>
-                        <li>Cronogramas personalizados com inteligência artificial.</li>
-                        <li>Simulados adaptativos que se ajustam ao seu nível.</li>
-                        <li>Comunidade ativa com milhares de concurseiros.</li>
-                      </ul>
-                      <a href="/sobre" className="theme_btn wow fadeInUp2 animated" data-wow-delay='.3s'>Mais Detalhes</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Instructors Section */}
-          <section className="course-instructor nav-style-two pos-rel">
-            <div className="course-blur-shape"></div>
-            <div className="course-bg-space pt-150 pb-120 pt-md-95 pb-md-70 pt-xs-95 pb-xs-70">
-              <div className="container">
-                <div className="row">
-                  <div className="col-xl-8 col-lg-9">
-                    <div className="section-title text-center text-md-start mb-60">
-                      <h5 className="bottom-line mb-25">Nossos Instrutores</h5>
-                      <h2 className="mb-25">Explore Instrutores Experientes</h2>
-                    </div>
-                  </div>
-                </div>
-                <div className="instructor-active owl-carousel">
-                  {instrutores.map((instrutor, index) => (
-                    <div key={index} className="item">
-                      <div className="z-instructors text-center mb-30">
-                        <div className="z-instructors__thumb mb-15">
-                          <img src={instrutor.image} alt="" />
-                          <div className="social-media">
-                            <a href="#"><i className="fab fa-facebook-f"></i></a>
-                            <a href="#"><i className="fab fa-twitter"></i></a>
-                            <a href="#"><i className="fab fa-instagram"></i></a>
-                            <a href="#"><i className="fab fa-youtube"></i></a>
-                          </div>
-                        </div>
-                        <div className="z-instructors__content">
-                          <h4 className="sub-title mb-10">
-                            <a href="/instrutores">{instrutor.name}</a>
-                          </h4>
-                          <p>{instrutor.specialty}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
-
         {/* Testimonials Section */}
-        <section className="testimonial-area testimonial-pad pt-150 pb-120 pt-md-95 pb-md-70 pt-xs-95 pb-xs-70">
-          <div className="container custom-container-testimonial">
-            <div className="row align-items-center">
-              <div className="col-lg-8">
-                <div className="section-title text-center text-md-start mb-35">
-                  <h5 className="bottom-line mb-25">Depoimentos</h5>
-                  <h2 className="mb-25">O que Nossos Alunos Dizem</h2>
-                </div>
+        <section className="testimonials-section py-16 lg:py-20">
+          <div className="container mx-auto px-4 lg:px-6 max-w-7xl">
+            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between mb-12 lg:mb-16">
+              <div className="text-center lg:text-left mb-8 lg:mb-0">
+                <h5 className="text-orange-500 text-sm font-semibold uppercase tracking-wider mb-4">Depoimentos</h5>
+                <h2 className="text-3xl md:text-4xl font-bold text-gray-900">O que Nossos Alunos Dizem</h2>
               </div>
-              <div className="col-lg-4 text-center text-lg-end">
-                <a href="/depoimentos" className="theme_btn">Ler Todos os Depoimentos</a>
-              </div>
+              <Link
+                href="/depoimentos"
+                className="inline-block px-6 py-3 bg-orange-500 text-white font-semibold rounded-lg border-2 border-gray-800 shadow-[3px_3px_0px_0px_#2d2d2d] hover:bg-orange-600 hover:shadow-[1px_1px_0px_0px_#2d2d2d] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-300 mx-auto lg:mx-0"
+              >
+                Ler Todos os Depoimentos
+              </Link>
             </div>
-            <div className="row testimonial-active-01">
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
               {testimonials.map((testimonial, index) => (
-                <div key={index} className="col-xl-3">
-                  <div className="item">
-                    <div className="testimonial-wrapper mb-30">
-                      <div className="testimonial-authors overflow-hidden mb-15">
-                        <div className="testimonial-authors__avatar">
-                          <img src={testimonial.image} alt="" />
-                        </div>
-                        <div className="testimonial-authors__content mt-10">
-                          <h4 className="sub-title">{testimonial.name}</h4>
-                          <p>{testimonial.role}</p>
-                        </div>
-                      </div>
-                      <p>"{testimonial.text}"</p>
-                      <div className="quote-icon mt-20">
-                        <img src="/img/icon/quote.svg" alt="" />
-                      </div>
+                <div
+                  key={index}
+                  className="testimonial-card bg-white p-6 rounded-xl border-2 border-gray-800 shadow-[4px_4px_0px_0px_#2d2d2d] hover:shadow-[6px_6px_0px_0px_#2d2d2d] hover:-translate-y-1 transition-all duration-300"
+                >
+                  <div className="flex items-center gap-4 mb-6">
+                    <img
+                      src={testimonial.image || "/placeholder.svg"}
+                      alt={testimonial.name}
+                      className="w-16 h-16 rounded-full border-2 border-gray-800 object-cover"
+                    />
+                    <div>
+                      <h4 className="font-bold text-gray-900">{testimonial.name}</h4>
+                      <p className="text-orange-500 text-sm font-semibold">{testimonial.role}</p>
                     </div>
+                  </div>
+
+                  <p className="text-gray-600 italic leading-relaxed mb-4">"{testimonial.text}"</p>
+
+                  <div className="text-right">
+                    <img
+                      src="/placeholder.svg?height=24&width=24&text=Quote"
+                      alt="Quote"
+                      className="w-6 h-6 opacity-30 ml-auto"
+                    />
                   </div>
                 </div>
               ))}
@@ -774,61 +964,78 @@ export function HomePage() {
         </section>
 
         {/* Blog Section */}
-        <section className="blog-area mr-100 ml-100">
-          <div className="blog-bg gradient-bg pl-100 pr-100 pt-150 pb-120 pt-md-100 pb-md-70 pt-xs-100 pb-xs-70">
-            <div className="container">
-              <div className="row justify-content-center">
-                <div className="col-lg-8">
-                  <div className="section-title text-center mb-60">
-                    <h5 className="bottom-line mb-25">Últimas Notícias</h5>
-                    <h2 className="mb-25">Muitas Novidades & Dicas</h2>
+        <section className="blog-section py-16 lg:py-20 bg-gradient-to-br from-orange-500 to-orange-600 mx-4 lg:mx-12 rounded-2xl">
+          <div className="container mx-auto px-4 lg:px-6">
+            <div className="text-center mb-12 lg:mb-16">
+              <h5 className="text-orange-200 text-sm font-semibold uppercase tracking-wider mb-4">Últimas Notícias</h5>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white">Muitas Novidades & Dicas</h2>
+            </div>
+
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12">
+              {blogs.map((blog, index) => (
+                <div
+                  key={index}
+                  className="blog-card bg-white rounded-xl border-2 border-gray-800 shadow-[4px_4px_0px_0px_#2d2d2d] hover:shadow-[6px_6px_0px_0px_#2d2d2d] hover:-translate-y-1 transition-all duration-300 overflow-hidden"
+                >
+                  <div className="relative">
+                    <img
+                      src={blog.image || "/placeholder.svg"}
+                      alt={blog.title}
+                      className="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
+                    />
                   </div>
-                </div>
-              </div>
-              <div className="row">
-                {blogs.map((blog, index) => (
-                  <div key={index} className="col-lg-4 col-md-6">
-                    <div className="z-blogs mb-30 wow fadeInUp2 animated" data-wow-delay={`.${index + 1}s`}>
-                      <div className="z-blogs__thumb mb-30">
-                        <a href="/blog"><img src={blog.image} alt="" /></a>
-                      </div>
-                      <div className="z-blogs__content">
-                        <h5 className="mb-25">{blog.tags.join(' . ')}</h5>
-                        <h4 className="sub-title mb-15">
-                          <a href="/blog">{blog.title}</a>
-                        </h4>
-                        <div className="z-blogs__meta d-sm-flex justify-content-between pt-20">
-                          <span>Data: {blog.date}</span>
-                          <span>Por {blog.author}</span>
-                        </div>
-                      </div>
+
+                  <div className="p-6">
+                    <div className="flex gap-2 mb-4">
+                      {blog.tags.map((tag, tagIndex) => (
+                        <span key={tagIndex} className="text-orange-500 text-xs font-semibold uppercase tracking-wider">
+                          {tag}
+                          {tagIndex < blog.tags.length - 1 && " • "}
+                        </span>
+                      ))}
+                    </div>
+
+                    <h3 className="text-lg font-bold text-gray-900 mb-4 leading-tight hover:text-orange-500 transition-colors">
+                      <Link href="/blog">{blog.title}</Link>
+                    </h3>
+
+                    <div className="flex justify-between items-center text-sm text-gray-600 pt-4 border-t border-gray-200">
+                      <span>Data: {blog.date}</span>
+                      <span>Por {blog.author}</span>
                     </div>
                   </div>
-                ))}
-              </div>
-              <div className="row">
-                <div className="col-lg-12 text-center mt-20 mb-30 wow fadeInUp2 animated" data-wow-delay='.4s'>
-                  <a href="/blog" className="theme_btn">Carregar Mais</a>
                 </div>
-              </div>
+              ))}
+            </div>
+
+            <div className="text-center">
+              <Link
+                href="/blog"
+                className="inline-block px-8 py-3 bg-white text-orange-500 font-semibold rounded-lg border-2 border-gray-800 shadow-[3px_3px_0px_0px_#2d2d2d] hover:bg-gray-50 hover:shadow-[1px_1px_0px_0px_#2d2d2d] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-300"
+              >
+                Carregar Mais
+              </Link>
             </div>
           </div>
         </section>
 
         {/* Newsletter Section */}
-        <section className="subscribe-area border-bot pt-145 pb-50 pt-md-90 pt-xs-90">
-          <div className="container">
-            <div className="row justify-content-center">
-              <div className="col-xl-8">
-                <div className="subscribe-wrapper text-center mb-30">
-                  <h2>Inscreva-se na nossa Newsletter & Receba todas as atualizações.</h2>
-                  <div className="subscribe-form-box pos-rel">
-                    <form className="subscribe-form">
-                      <input type="text" placeholder="Digite seu E-mail" />
-                    </form>
-                    <button className="sub_btn">Inscrever-se Agora</button>
-                  </div>
-                </div>
+        <section className="newsletter-section py-16 lg:py-20 border-b border-gray-200">
+          <div className="container mx-auto px-4 lg:px-6">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
+                Inscreva-se na nossa Newsletter & Receba todas as atualizações
+              </h2>
+
+              <div className="flex flex-col md:flex-row gap-4 max-w-2xl mx-auto">
+                <input
+                  type="email"
+                  placeholder="Digite seu E-mail"
+                  className="flex-1 px-4 py-3 border-2 border-gray-800 rounded-lg text-base shadow-[3px_3px_0px_0px_#2d2d2d] focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                />
+                <button className="px-6 py-3 bg-orange-500 text-white font-semibold rounded-lg border-2 border-gray-800 shadow-[3px_3px_0px_0px_#2d2d2d] hover:bg-orange-600 hover:shadow-[1px_1px_0px_0px_#2d2d2d] hover:translate-x-0.5 hover:translate-y-0.5 transition-all duration-300 whitespace-nowrap">
+                  Inscrever-se Agora
+                </button>
               </div>
             </div>
           </div>
@@ -836,74 +1043,141 @@ export function HomePage() {
       </main>
 
       {/* Footer */}
-      <footer className="footer-area pt-70 pb-40">
-        <div className="container">
-          <div className="row mb-15">
-            <div className="col-xl-3 col-lg-4 col-md-6 wow fadeInUp2 animated" data-wow-delay='.1s'>
-              <div className="footer__widget mb-30">
-                <div className="footer-log mb-20">
-                  <a href="/" className="logo">
-                    <img src="/img/logo/header_logo_one.svg" alt="" />
+      <footer className="footer-section bg-gray-50 py-16 lg:py-20">
+        <div className="container mx-auto px-4 lg:px-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-12">
+            {/* Company Info */}
+            <div className="lg:col-span-1">
+              <Link href="/" className="block mb-6">
+                <img
+                  src="/placeholder.svg?height=32&width=120&text=Concursify"
+                  alt="Concursify"
+                  className="h-8 w-auto"
+                />
+              </Link>
+              <p className="text-gray-600 leading-relaxed mb-6">
+                Plataforma completa para preparação de concursos públicos com inteligência artificial e ferramentas
+                avançadas.
+              </p>
+              <div className="flex space-x-3">
+                {[Facebook, Twitter, Linkedin, Instagram].map((Icon, index) => (
+                  <a
+                    key={index}
+                    href="#"
+                    className="w-10 h-10 bg-orange-500 text-white rounded-full flex items-center justify-center border-2 border-gray-800 hover:bg-orange-600 hover:-translate-y-0.5 transition-all duration-300"
+                  >
+                    <Icon className="h-4 w-4" />
                   </a>
-                </div>
-                <p>Plataforma completa para preparação de concursos públicos com inteligência artificial e ferramentas avançadas.</p>
-                <div className="social-media footer__social mt-30">
-                  <a href="#"><i className="fab fa-facebook-f"></i></a>
-                  <a href="#"><i className="fab fa-twitter"></i></a>
-                  <a href="#"><i className="fab fa-linkedin-in"></i></a>
-                  <a href="#"><i className="fab fa-google-plus-g"></i></a>
-                </div>
+                ))}
               </div>
             </div>
-            <div className="col-xl-3 col-lg-4 col-md-6 wow fadeInUp2 animated" data-wow-delay='.3s'>
-              <div className="footer__widget mb-30 pl-40 pl-md-0 pl-xs-0">
-                <h6 className="widget-title mb-35">Fale Conosco</h6>
-                <ul className="fot-list">
-                  <li><a href="#">contato@concursify.com</a></li>
-                  <li><a href="#">+55 11 99999-9999</a></li>
-                  <li><a href="#">Termos & Condições</a></li>
-                  <li><a href="#">Política de Privacidade</a></li>
-                  <li><a href="/contato">Contatos</a></li>
-                  <li><a href="#">Trabalhe Conosco</a></li>
-                </ul>
-              </div>
+
+            {/* Contact */}
+            <div>
+              <h6 className="text-lg font-bold text-gray-900 mb-6">Fale Conosco</h6>
+              <ul className="space-y-3 text-gray-600">
+                <li>
+                  <a href="mailto:contato@concursify.com" className="hover:text-orange-500 transition-colors">
+                    contato@concursify.com
+                  </a>
+                </li>
+                <li>
+                  <a href="tel:+5511999999999" className="hover:text-orange-500 transition-colors">
+                    +55 11 99999-9999
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-orange-500 transition-colors">
+                    Termos & Condições
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-orange-500 transition-colors">
+                    Política de Privacidade
+                  </a>
+                </li>
+                <li>
+                  <a href="/contato" className="hover:text-orange-500 transition-colors">
+                    Contatos
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="hover:text-orange-500 transition-colors">
+                    Trabalhe Conosco
+                  </a>
+                </li>
+              </ul>
             </div>
-            <div className="col-xl-3 col-lg-4 col-md-6 wow fadeInUp2 animated" data-wow-delay='.5s'>
-              <div className="footer__widget mb-25 pl-90 pl-md-0 pl-xs-0">
-                <h6 className="widget-title mb-35">Links Rápidos</h6>
-                <ul className="fot-list">
-                  <li><a href="/sobre">Sobre Nós</a></li>
-                  <li><a href="/concursos">Explorar Concursos</a></li>
-                  <li><a href="/simulados">Nossos Simulados</a></li>
-                  <li><a href="/forum">Fórum</a></li>
-                </ul>
-              </div>
+
+            {/* Quick Links */}
+            <div>
+              <h6 className="text-lg font-bold text-gray-900 mb-6">Links Rápidos</h6>
+              <ul className="space-y-3 text-gray-600">
+                <li>
+                  <a href="/sobre" className="hover:text-orange-500 transition-colors">
+                    Sobre Nós
+                  </a>
+                </li>
+                <li>
+                  <a href="/concursos" className="hover:text-orange-500 transition-colors">
+                    Explorar Concursos
+                  </a>
+                </li>
+                <li>
+                  <a href="/simulados" className="hover:text-orange-500 transition-colors">
+                    Nossos Simulados
+                  </a>
+                </li>
+                <li>
+                  <a href="/forum" className="hover:text-orange-500 transition-colors">
+                    Fórum
+                  </a>
+                </li>
+              </ul>
             </div>
-            <div className="col-xl-3 col-lg-6 col-md-6 wow fadeInUp2 animated" data-wow-delay='.7s'>
-              <div className="footer__widget mb-30 pl-150 pl-lg-0 pl-md-0 pl-xs-0">
-                <h6 className="widget-title mb-35">Recursos</h6>
-                <ul className="fot-list mb-30">
-                  <li><a href="/">Página Inicial</a></li>
-                  <li><a href="/depoimentos">Depoimentos</a></li>
-                  <li><a href="/blog">Últimas Notícias</a></li>
-                  <li><a href="/ajuda">Central de Ajuda</a></li>
-                </ul>
-              </div>
+
+            {/* Resources */}
+            <div>
+              <h6 className="text-lg font-bold text-gray-900 mb-6">Recursos</h6>
+              <ul className="space-y-3 text-gray-600">
+                <li>
+                  <a href="/" className="hover:text-orange-500 transition-colors">
+                    Página Inicial
+                  </a>
+                </li>
+                <li>
+                  <a href="/depoimentos" className="hover:text-orange-500 transition-colors">
+                    Depoimentos
+                  </a>
+                </li>
+                <li>
+                  <a href="/blog" className="hover:text-orange-500 transition-colors">
+                    Últimas Notícias
+                  </a>
+                </li>
+                <li>
+                  <a href="/ajuda" className="hover:text-orange-500 transition-colors">
+                    Central de Ajuda
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
-        </div>
-        <div className="copy-right-area border-bot pt-40">
-          <div className="container">
-            <div className="row align-items-center">
-              <div className="col-lg-12">
-                <div className="copyright text-center">
-                  <h5>Copyright@ 2024 <a href="#">Concursify</a>. Todos os Direitos Reservados</h5>
-                </div>
-              </div>
+
+          {/* Copyright */}
+          <div className="border-t border-gray-200 pt-8">
+            <div className="text-center">
+              <p className="text-gray-600 text-sm">
+                Copyright© 2024{" "}
+                <a href="#" className="text-orange-500 hover:text-orange-600 transition-colors">
+                  Concursify
+                </a>
+                . Todos os Direitos Reservados
+              </p>
             </div>
           </div>
         </div>
       </footer>
     </div>
   )
-} 
+}

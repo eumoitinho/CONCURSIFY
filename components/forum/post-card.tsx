@@ -140,7 +140,7 @@ export function PostCard({
   }
 
   return (
-    <Card className={`${post.parent_id ? 'ml-8 border-l-4 border-l-blue-200' : ''} ${className}`}>
+    <Card className={`${post.parent_id ? 'ml-8 border-l-4 border-l-orange-300' : ''} ${className}`}>
       <CardContent className="p-6">
         <div className="flex space-x-4">
           {/* Avatar */}
@@ -163,21 +163,21 @@ export function PostCard({
                 </span>
 
                 {isThreadAuthor && (
-                  <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                  <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200 border-2 shadow-[2px_2px_0px_0px_#2d2d2d] font-semibold">
                     <Edit className="h-3 w-3 mr-1" />
                     Autor
                   </Badge>
                 )}
 
                 {post.is_solution && (
-                  <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                  <Badge variant="outline" className="bg-green-50 text-green-700 border-green-500 border-2 shadow-[2px_2px_0px_0px_#2d2d2d] font-semibold">
                     <CheckCircle2 className="h-3 w-3 mr-1" />
                     Solução
                   </Badge>
                 )}
 
                 {isPending && (
-                  <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                  <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-500 border-2 shadow-[2px_2px_0px_0px_#2d2d2d] font-semibold">
                     <Shield className="h-3 w-3 mr-1" />
                     Em revisão
                   </Badge>
