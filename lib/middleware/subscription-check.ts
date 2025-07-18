@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { SubscriptionLimits, FeatureType } from '@/lib/subscription/limits'
 
 // Re-export SubscriptionLimits for other modules
@@ -15,9 +16,10 @@ export interface SubscriptionCheckConfig {
 export function withSubscriptionCheck(config: SubscriptionCheckConfig) {
   return function middleware(handler: Function) {
     return async function (req: NextRequest, context?: any) {
-      const session = await getServerSession()
+      const supabase = createRouteHandlerClient({ cookies })
+      const { data: { user }, error: authError } = await supabase.auth.getUser()
       
-      if (!session?.user?.id) {
+      if (authError || !user) {
         return NextResponse.json(
           { error: 'Não autenticado' },
           { status: 401 }
@@ -26,14 +28,14 @@ export function withSubscriptionCheck(config: SubscriptionCheckConfig) {
 
       // Verificar se pode usar a feature
       const canUse = await SubscriptionLimits.canUseFeature(
-        session.user.id,
+        user.id,
         config.feature,
         config.timeframe
       )
 
       if (!canUse) {
         const upgradeInfo = await SubscriptionLimits.requiresUpgrade(
-          session.user.id,
+          user.id,
           config.feature
         )
 

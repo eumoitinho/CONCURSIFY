@@ -1,6 +1,9 @@
-import { Suspense } from 'react'
-import { notFound, redirect } from 'next/navigation'
-import { getServerSession } from 'next-auth'
+'use client'
+
+import { Suspense, useEffect, useState } from 'react'
+import { notFound } from 'next/navigation'
+import { useAuth } from '@/contexts/auth-context'
+import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -29,19 +32,53 @@ interface SimuladoRelatorioPageProps {
   }
 }
 
-async function SimuladoRelatorioContent({ id }: { id: string }) {
-  const session = await getServerSession()
-  if (!session?.user?.id) {
-    redirect('/auth/signin')
+function SimuladoRelatorioContent({ id }: { id: string }) {
+  const { user, isLoading } = useAuth()
+  const router = useRouter()
+  const [simuladoData, setSimuladoData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (isLoading) return
+    
+    if (!user) {
+      router.push('/auth/signin')
+      return
+    }
+
+    const loadSimulado = async () => {
+      try {
+        const result = await getSimuladoById(id)
+        
+        if (!result.success || !result.data) {
+          notFound()
+          return
+        }
+
+        setSimuladoData(result.data)
+      } catch (error) {
+        console.error('Erro ao carregar simulado:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadSimulado()
+  }, [user, isLoading, id, router])
+
+  if (isLoading || loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FF723A]"></div>
+      </div>
+    )
   }
 
-  const result = await getSimuladoById(id)
-  
-  if (!result.success || !result.data) {
-    notFound()
+  if (!simuladoData) {
+    return null
   }
 
-  const { simulado, respostas } = result.data
+  const { simulado, respostas } = simuladoData
 
   if (simulado.status !== 'finalizado') {
     return (

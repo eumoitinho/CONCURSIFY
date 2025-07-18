@@ -46,12 +46,12 @@ export async function criarSimulado(input: CriarSimuladoInput) {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
     // Verificar acesso à feature
-    const accessCheck = await checkFeatureAccess(session.user.id, 'simulados')
+    const accessCheck = await checkFeatureAccess(user.id, 'simulados')
     if (!accessCheck.allowed) {
       return { 
         success: false, 
@@ -96,7 +96,7 @@ export async function criarSimulado(input: CriarSimuladoInput) {
     const { data: simuladoSalvo, error: saveError } = await supabase
       .from('simulados')
       .insert({
-        user_id: session.user.id,
+        user_id: user.id,
         titulo: validatedInput.titulo,
         configuracao: validatedInput,
         questoes_ids: simuladoGerado.questoes_selecionadas,
@@ -113,7 +113,7 @@ export async function criarSimulado(input: CriarSimuladoInput) {
     }
 
     // Registrar uso da feature
-    await SubscriptionLimits.trackFeatureUsage(session.user.id, 'simulados', {
+    await SubscriptionLimits.trackFeatureUsage(user.id, 'simulados', {
       num_questoes: validatedInput.num_questoes,
       materias: validatedInput.materias,
       modo: validatedInput.modo
@@ -157,12 +157,12 @@ export async function gerarSimuladoAdaptativo(preferenciasUsuario: {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
     // Verificar acesso
-    const accessCheck = await checkFeatureAccess(session.user.id, 'simulados')
+    const accessCheck = await checkFeatureAccess(user.id, 'simulados')
     if (!accessCheck.allowed) {
       return { 
         success: false, 
@@ -181,7 +181,7 @@ export async function gerarSimuladoAdaptativo(preferenciasUsuario: {
         is_correct,
         questoes!inner(materia, assunto, nivel_dificuldade)
       `)
-      .eq('simulados.user_id', session.user.id)
+      .eq('simulados.user_id', user.id)
       .limit(100)
 
     // Calcular performance por matéria
@@ -244,7 +244,7 @@ export async function iniciarSimulado(simuladoId: string) {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -256,7 +256,7 @@ export async function iniciarSimulado(simuladoId: string) {
         questoes:questoes_ids
       `)
       .eq('id', simuladoId)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .single()
 
     if (error || !simulado) {
@@ -324,7 +324,7 @@ export async function responderSimulado(input: ResponderSimuladoInput) {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -335,7 +335,7 @@ export async function responderSimulado(input: ResponderSimuladoInput) {
       .from('simulados')
       .select('*')
       .eq('id', validatedInput.simulado_id)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .single()
 
     if (simuladoError || !simulado) {
@@ -468,7 +468,7 @@ export async function buscarSimulados(filtros: {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -487,7 +487,7 @@ export async function buscarSimulados(filtros: {
         tempo_fim,
         created_at
       `)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .order('created_at', { ascending: false })
 
     if (status) {
@@ -526,7 +526,7 @@ export async function getSimuladoById(id: string) {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -534,7 +534,7 @@ export async function getSimuladoById(id: string) {
       .from('simulados')
       .select('*')
       .eq('id', id)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .single()
 
     if (error || !simulado) {
@@ -588,7 +588,7 @@ export async function deletarSimulado(id: string) {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -603,7 +603,7 @@ export async function deletarSimulado(id: string) {
       .from('simulados')
       .delete()
       .eq('id', id)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
 
     if (error) {
       throw error
@@ -630,7 +630,7 @@ export async function getEstatisticasSimulados() {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -638,20 +638,20 @@ export async function getEstatisticasSimulados() {
     const { count: totalSimulados } = await supabase
       .from('simulados')
       .select('*', { count: 'exact', head: true })
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
 
     // Simulados finalizados
     const { count: finalizados } = await supabase
       .from('simulados')
       .select('*', { count: 'exact', head: true })
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .eq('status', 'finalizado')
 
     // Média de pontuação
     const { data: pontuacoes } = await supabase
       .from('simulados')
       .select('pontuacao')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .eq('status', 'finalizado')
       .not('pontuacao', 'is', null)
 
@@ -666,7 +666,7 @@ export async function getEstatisticasSimulados() {
         is_correct,
         questoes!inner(materia)
       `)
-      .eq('simulados.user_id', session.user.id)
+      .eq('simulados.user_id', user.id)
 
     const performancePorMateria: Record<string, { acertos: number; total: number; percentual: number }> = {}
     

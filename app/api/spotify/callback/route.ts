@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { spotifyClient } from '@/lib/spotify/spotify-client'
-import { createServerSupabaseClient } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession()
-    if (!session?.user?.id) {
+    const supabase = createRouteHandlerClient({ cookies })
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
       return NextResponse.redirect(new URL('/auth/signin', request.url))
     }
 
@@ -28,13 +30,11 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    const supabase = createServerSupabaseClient()
-
     // Validar state para prevenir CSRF
     const { data: sessionData } = await supabase
       .from('user_sessions')
       .select('session_data')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .single()
 
     if (!sessionData?.session_data?.spotify_oauth_state || 
@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
     const { error: dbError } = await supabase
       .from('spotify_connections')
       .upsert({
-        user_id: session.user.id,
+        user_id: user.id,
         spotify_user_id: spotifyUser.id,
         display_name: spotifyUser.display_name,
         email: spotifyUser.email,
@@ -81,9 +81,9 @@ export async function GET(request: NextRequest) {
       .update({ 
         session_data: null 
       })
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
 
-    console.log('✅ Spotify connected successfully for user:', session.user.id)
+    console.log('✅ Spotify connected successfully for user:', user.id)
 
     // Redirecionar para página de sucesso
     return NextResponse.redirect(

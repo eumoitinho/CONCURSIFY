@@ -33,12 +33,12 @@ export async function gerarCronograma(input: z.infer<typeof GerarCronogramaSchem
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
     // Verificar acesso à feature
-    const accessCheck = await checkFeatureAccess(session.user.id, 'cronogramas')
+    const accessCheck = await checkFeatureAccess(user.id, 'cronogramas')
     if (!accessCheck.allowed) {
       return { 
         success: false, 
@@ -79,7 +79,7 @@ export async function gerarCronograma(input: z.infer<typeof GerarCronogramaSchem
       .from('cronogramas')
       .insert({
         concurso_id: validatedInput.concurso_id,
-        user_id: session.user.id,
+        user_id: user.id,
         user_preferences: validatedInput.user_preferences,
         cronograma_data: cronogramaData,
       })
@@ -92,7 +92,7 @@ export async function gerarCronograma(input: z.infer<typeof GerarCronogramaSchem
     }
 
     // Registrar uso da feature
-    await SubscriptionLimits.trackFeatureUsage(session.user.id, 'cronogramas')
+    await SubscriptionLimits.trackFeatureUsage(user.id, 'cronogramas')
 
     // Revalidar cache
     revalidatePath('/concursos')
@@ -167,7 +167,7 @@ export async function getCronogramaById(id: string) {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -184,7 +184,7 @@ export async function getCronogramaById(id: string) {
         )
       `)
       .eq('id', id)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .single()
 
     if (error || !data) {
@@ -211,7 +211,7 @@ export async function deletarCronograma(id: string) {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -219,7 +219,7 @@ export async function deletarCronograma(id: string) {
       .from('cronogramas')
       .delete()
       .eq('id', id)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
 
     if (error) {
       throw error
@@ -246,7 +246,7 @@ export async function atualizarCronograma(id: string, updates: Partial<Cronogram
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -255,7 +255,7 @@ export async function atualizarCronograma(id: string, updates: Partial<Cronogram
       .from('cronogramas')
       .select('cronograma_data')
       .eq('id', id)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .single()
 
     if (fetchError || !cronogramaAtual) {
@@ -276,7 +276,7 @@ export async function atualizarCronograma(id: string, updates: Partial<Cronogram
         updated_at: new Date().toISOString()
       })
       .eq('id', id)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
 
     if (updateError) {
       throw updateError
@@ -303,7 +303,7 @@ export async function gerarDicasPersonalizadas(materias: string[], nivelConhecim
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -313,7 +313,7 @@ export async function gerarDicasPersonalizadas(materias: string[], nivelConhecim
     const { data: historico } = await supabase
       .from('pomodoro_sessions')
       .select('subject, duration, completed')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .limit(20)
 
     const pontosFortes: string[] = []

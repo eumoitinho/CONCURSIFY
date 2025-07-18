@@ -52,14 +52,14 @@ export async function getSpotifyConnection() {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
     const { data, error } = await supabase
       .from('spotify_connections')
       .select('*')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .eq('is_active', true)
       .single()
 
@@ -76,7 +76,7 @@ export async function getSpotifyConnection() {
         // Atualizar no banco
         await supabase
           .rpc('update_spotify_token', {
-            p_user_id: session.user.id,
+            p_user_id: user.id,
             p_access_token: newToken.access_token,
             p_refresh_token: newToken.refresh_token,
             p_expires_in: newToken.expires_in
@@ -86,7 +86,7 @@ export async function getSpotifyConnection() {
         const { data: updatedData } = await supabase
           .from('spotify_connections')
           .select('*')
-          .eq('user_id', session.user.id)
+          .eq('user_id', user.id)
           .single()
 
         return { success: true, data: updatedData }
@@ -97,7 +97,7 @@ export async function getSpotifyConnection() {
         await supabase
           .from('spotify_connections')
           .update({ is_active: false })
-          .eq('user_id', session.user.id)
+          .eq('user_id', user.id)
 
         return { success: false, error: 'Token expirado - reconecte sua conta Spotify' }
       }
@@ -122,14 +122,14 @@ export async function disconnectSpotify() {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
     const { error } = await supabase
       .from('spotify_connections')
       .update({ is_active: false })
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
 
     if (error) {
       throw error
@@ -155,7 +155,7 @@ export async function generatePlaylist(input: GeneratePlaylistInput) {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -197,7 +197,7 @@ export async function generatePlaylist(input: GeneratePlaylistInput) {
     const { data: savedPlaylist, error: dbError } = await supabase
       .from('ai_generated_playlists')
       .insert({
-        user_id: session.user.id,
+        user_id: user.id,
         spotify_playlist_id: spotifyPlaylistId,
         spotify_uri: `spotify:playlist:${spotifyPlaylistId}`,
         subject: validatedInput.subject,
@@ -290,7 +290,7 @@ export async function getUserPlaylists(filters: {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -302,7 +302,7 @@ export async function getUserPlaylists(filters: {
         *,
         ai_playlist_tracks(count)
       `)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .eq('is_archived', false)
       .order('created_at', { ascending: false })
 
@@ -345,7 +345,7 @@ export async function getPlaylistDetails(playlistId: string) {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -356,7 +356,7 @@ export async function getPlaylistDetails(playlistId: string) {
         ai_playlist_tracks(*)
       `)
       .eq('id', playlistId)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .single()
 
     if (error) {
@@ -382,7 +382,7 @@ export async function ratePlaylist(playlistId: string, rating: number, feedback?
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -398,7 +398,7 @@ export async function ratePlaylist(playlistId: string, rating: number, feedback?
         updated_at: new Date().toISOString()
       })
       .eq('id', playlistId)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
 
     if (error) {
       throw error
@@ -424,7 +424,7 @@ export async function playPlaylist(playlistId: string, deviceId?: string) {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -438,7 +438,7 @@ export async function playPlaylist(playlistId: string, deviceId?: string) {
       .from('ai_generated_playlists')
       .select('spotify_uri')
       .eq('id', playlistId)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .single()
 
     if (!playlist) {
@@ -508,14 +508,14 @@ export async function getMusicPreferences() {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
     const { data, error } = await supabase
       .from('user_music_preferences')
       .select('*')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .single()
 
     if (error && error.code !== 'PGRST116') {
@@ -541,7 +541,7 @@ export async function updateMusicPreferences(input: UpdateMusicPreferencesInput)
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -550,7 +550,7 @@ export async function updateMusicPreferences(input: UpdateMusicPreferencesInput)
     const { error } = await supabase
       .from('user_music_preferences')
       .upsert({
-        user_id: session.user.id,
+        user_id: user.id,
         ...validatedInput,
         updated_at: new Date().toISOString()
       })

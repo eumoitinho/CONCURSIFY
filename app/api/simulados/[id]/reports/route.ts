@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { createServerSupabaseClient } from '@/lib/supabase'
 import { generateSimuladoReport, SimuladoReportData } from '@/lib/reports/simulado-report'
 import { checkFeatureAccess } from '@/lib/middleware/subscription-check'
@@ -13,7 +14,12 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession()
+    const supabase = createRouteHandlerClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return NextResponse.json({ error: 'Usuário não autenticado' }, { status: 401 })
+  }
     const userId = (session?.user as any)?.id
     if (!userId) {
       return NextResponse.json(

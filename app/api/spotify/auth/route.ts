@@ -1,21 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { spotifyClient } from '@/lib/spotify/spotify-client'
-import { createServerSupabaseClient } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
   try {
-    const session = await getServerSession()
-    const userId = (session?.user as any)?.id
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    const supabase = createRouteHandlerClient({ cookies })
+    const { data: { user }, error: authError } = await supabase.auth.getUser()
+    
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Usuário não autenticado' }, { status: 401 })
     }
+
+    const userId = user.id
 
     // Gerar state único para segurança
     const state = `${userId}-${Date.now()}-${Math.random().toString(36).substring(7)}`
     
     // Salvar state no Supabase para validação posterior
-    const supabase = createServerSupabaseClient()
     await supabase
       .from('user_sessions')
       .upsert({

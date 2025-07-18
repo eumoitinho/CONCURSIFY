@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { scrapeConcursos } from '@/app/actions/concursos'
 
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession()
+    const supabase = createRouteHandlerClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return NextResponse.json({ error: 'Usuário não autenticado' }, { status: 401 })
+  }
     if (!session?.user?.id) {
       return NextResponse.json(
         { error: 'Não autenticado' },

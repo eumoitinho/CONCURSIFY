@@ -142,7 +142,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Carregar assinatura
-      const { data: subscriptionData } = await supabase
+      const { data: subscriptionData, error: subError } = await supabase
         .from('user_subscriptions')
         .select('*')
         .eq('user_id', userId)
@@ -150,6 +150,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       if (subscriptionData) {
         setSubscription(subscriptionData)
+      } else if (subError && subError.code === 'PGRST116') {
+        // Não há assinatura - criar plano gratuito
+        const { data: freePlan } = await supabase
+          .from('subscription_plans')
+          .select('id')
+          .eq('name', 'Gratuito')
+          .single()
+        
+        if (freePlan) {
+          const { data: newSubscription } = await supabase
+            .from('user_subscriptions')
+            .insert({
+              user_id: userId,
+              plan_id: freePlan.id,
+              status: 'active',
+              current_period_start: new Date().toISOString(),
+              current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toISOString()
+            })
+            .select()
+            .single()
+          
+          if (newSubscription) {
+            setSubscription(newSubscription)
+          }
+        }
       }
     } catch (error) {
       console.error('Erro ao carregar perfil:', error)

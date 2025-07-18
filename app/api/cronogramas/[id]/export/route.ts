@@ -1,19 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { createServerSupabaseClient } from '@/lib/supabase'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { PDFGenerator } from '@/lib/exports/pdf-generator'
 import { CalendarExport } from '@/lib/exports/calendar-export'
 import { WhatsAppExport } from '@/lib/exports/whatsapp-export'
 import { SubscriptionLimits } from '@/lib/subscription/limits'
-import '@/lib/auth'
 
 export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession()
-    const userId = (session?.user as any)?.id
+    const supabase = createRouteHandlerClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return NextResponse.json({ error: 'Usuário não autenticado' }, { status: 401 })
+  }
+    const userId = user.id
     if (!userId) {
       return NextResponse.json(
         { error: 'Não autenticado' },
@@ -21,7 +25,6 @@ export async function GET(
       )
     }
 
-    const supabase = createServerSupabaseClient()
     const { searchParams } = new URL(req.url)
     const formato = searchParams.get('formato') // 'pdf', 'ics', 'whatsapp'
     const tipo = searchParams.get('tipo') // 'cronograma', 'semanal', 'diario'
@@ -131,8 +134,13 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
-    const session = await getServerSession()
-    const userId = (session?.user as any)?.id
+    const supabase = createRouteHandlerClient({ cookies })
+  const { data: { user }, error: authError } = await supabase.auth.getUser()
+  
+  if (authError || !user) {
+    return NextResponse.json({ error: 'Usuário não autenticado' }, { status: 401 })
+  }
+    const userId = user.id
     if (!userId) {
       return NextResponse.json(
         { error: 'Não autenticado' },
@@ -140,7 +148,6 @@ export async function POST(
       )
     }
 
-    const supabase = createServerSupabaseClient()
     const body = await req.json()
     const { dataInicio } = body
 

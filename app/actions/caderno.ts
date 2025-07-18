@@ -58,12 +58,12 @@ export async function createNote(input: CreateNoteInput) {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
     // Verificar acesso à feature
-    const accessCheck = await checkFeatureAccess(session.user.id, 'caderno')
+    const accessCheck = await checkFeatureAccess(user.id, 'caderno')
     if (!accessCheck.allowed) {
       return {
         success: false,
@@ -77,7 +77,7 @@ export async function createNote(input: CreateNoteInput) {
     console.log('📝 Criando nova nota...')
 
     // Gerar slug único
-    const slug = await generateUniqueSlug(validatedInput.title, session.user.id)
+    const slug = await generateUniqueSlug(validatedInput.title, user.id)
 
     // Processar markdown e extrair metadados
     const parseResult = await markdownParser.parseMarkdown(validatedInput.content)
@@ -86,7 +86,7 @@ export async function createNote(input: CreateNoteInput) {
     const { data: note, error: noteError } = await supabase
       .from('notes')
       .insert({
-        user_id: session.user.id,
+        user_id: user.id,
         title: validatedInput.title,
         content: validatedInput.content,
         type: validatedInput.type,
@@ -121,7 +121,7 @@ export async function createNote(input: CreateNoteInput) {
     }
 
     // Registrar uso da feature
-    await SubscriptionLimits.trackFeatureUsage(session.user.id, 'caderno', {
+    await SubscriptionLimits.trackFeatureUsage(user.id, 'caderno', {
       action: 'create_note',
       note_type: validatedInput.type,
       word_count: parseResult.wordCount
@@ -159,7 +159,7 @@ export async function updateNote(input: UpdateNoteInput) {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -170,7 +170,7 @@ export async function updateNote(input: UpdateNoteInput) {
       .from('notes')
       .select('id, content, title')
       .eq('id', validatedInput.id)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .single()
 
     if (fetchError || !existingNote) {
@@ -227,7 +227,7 @@ export async function updateNote(input: UpdateNoteInput) {
       .from('notes')
       .update(updateData)
       .eq('id', validatedInput.id)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .select()
       .single()
 
@@ -271,7 +271,7 @@ export async function getNotes(filters: {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -303,7 +303,7 @@ export async function getNotes(filters: {
         updated_at,
         last_accessed_at
       `)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .eq('status', status)
       .order('is_pinned', { ascending: false })
       .order('updated_at', { ascending: false })
@@ -353,7 +353,7 @@ export async function getNoteBySlug(slug: string) {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -374,7 +374,7 @@ export async function getNoteBySlug(slug: string) {
         )
       `)
       .eq('slug', slug)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .eq('status', 'active')
       .single()
 
@@ -409,7 +409,7 @@ export async function createFolder(input: CreateFolderInput) {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -419,7 +419,7 @@ export async function createFolder(input: CreateFolderInput) {
     const { data: existingFolder } = await supabase
       .from('note_folders')
       .select('id')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .eq('path', validatedInput.path)
       .single()
 
@@ -430,7 +430,7 @@ export async function createFolder(input: CreateFolderInput) {
     const { data: folder, error } = await supabase
       .from('note_folders')
       .insert({
-        user_id: session.user.id,
+        user_id: user.id,
         name: validatedInput.name,
         path: validatedInput.path,
         parent_id: validatedInput.parent_id,
@@ -470,7 +470,7 @@ export async function getFolders() {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -480,7 +480,7 @@ export async function getFolders() {
         *,
         notes_count:notes(count)
       `)
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .order('path')
 
     if (error) {
@@ -508,14 +508,14 @@ export async function getPopularTags() {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
     const { data: notes } = await supabase
       .from('notes')
       .select('tags')
-      .eq('user_id', session.user.id)
+      .eq('user_id', user.id)
       .eq('status', 'active')
       .not('tags', 'is', null)
 
@@ -556,7 +556,7 @@ export async function getCadernoStats() {
   if (authError || !user) {
     return { success: false, error: 'Usuário não autenticado' }
   }
-    if (!session?.user?.id) {
+    if (authError || !user) {
       return { success: false, error: 'Usuário não autenticado' }
     }
 
@@ -570,19 +570,19 @@ export async function getCadernoStats() {
       supabase
         .from('notes')
         .select('*', { count: 'exact', head: true })
-        .eq('user_id', session.user.id)
+        .eq('user_id', user.id)
         .eq('status', 'active'),
       
       supabase
         .from('notes')
         .select('word_count, read_time_minutes')
-        .eq('user_id', session.user.id)
+        .eq('user_id', user.id)
         .eq('status', 'active'),
       
       supabase
         .from('notes')
         .select('created_at')
-        .eq('user_id', session.user.id)
+        .eq('user_id', user.id)
         .eq('status', 'active')
         .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()),
       

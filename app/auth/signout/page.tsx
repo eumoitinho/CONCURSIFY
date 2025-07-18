@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { signOut, getSession } from 'next-auth/react'
+import { useState } from 'react'
+import { useAuth } from '@/contexts/auth-context'
 import { useRouter } from 'next/navigation'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -10,28 +10,13 @@ import Link from 'next/link'
 
 export default function SignOutPage() {
   const [loading, setLoading] = useState(false)
-  const [session, setSession] = useState<any>(null)
+  const { user, signOut } = useAuth()
   const router = useRouter()
-
-  useEffect(() => {
-    const checkSession = async () => {
-      const currentSession = await getSession()
-      setSession(currentSession)
-      
-      if (!currentSession) {
-        router.push('/')
-      }
-    }
-    checkSession()
-  }, [router])
-
   const handleSignOut = async () => {
     setLoading(true)
     try {
-      await signOut({
-        callbackUrl: '/',
-        redirect: true
-      })
+      await signOut()
+      router.push('/')
     } catch (error) {
       console.error('Error signing out:', error)
     } finally {
@@ -43,7 +28,7 @@ export default function SignOutPage() {
     router.back()
   }
 
-  if (!session) {
+  if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center">
         <Loader2 className="h-8 w-8 animate-spin text-[#FF723A]" />
